@@ -1,0 +1,19 @@
+os:
+  - Visual Studio 2015
+
+environment:
+  matrix:
+    - TOOLSET: vs2015
+
+configuration: Release
+
+build:
+  project: build/$(TOOLSET)/obj-2-fieldap.sln
+
+after_build:
+  - cd build && 7z a ../../obj-2-fieldap.zip -r *.* && cd ../..
+
+artifacts:
+  - path: obj-2-fieldap.zip
+    name: binary
+    type: zip

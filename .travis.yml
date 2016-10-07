@@ -1,0 +1,22 @@
+language: cpp
+
+os:
+  - linux
+  - osx
+
+
+sudo: false
+compiler: clang
+
+addons:
+  artifacts:
+    s3_region: "eu-west-1"
+    debug: true
+    paths:
+    - build/obj-2-fieldap.$TRAVIS_OS_NAME
+
+script:
+  clang++ -std=c++14 process\*.cpp externals\*.cc main.cpp -lstdc++ -o build/obj-2-fieldap.$TRAVIS_OS_NAME
+
+notifications:
+  email: false
