@@ -5,7 +5,8 @@ os:
   - osx
 
 
-sudo: false
+sudo: required
+dist: trusty
 compiler: clang
 
 addons:
@@ -16,7 +17,7 @@ addons:
     - build/obj-2-fieldap.$TRAVIS_OS_NAME
 
 script:
-  clang++ -std=c++11 process/*.cpp externals/*.cc main.cpp -lstdc++ -o build/obj-2-fieldap.$TRAVIS_OS_NAME
+  clang++ -std=c++14 process/*.cpp externals/*.cc main.cpp -lstdc++ -o build/obj-2-fieldap.$TRAVIS_OS_NAME
 
 notifications:
   email: false
