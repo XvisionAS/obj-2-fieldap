@@ -51,16 +51,6 @@ struct process_t {
 	std::map<int, triangles_t>				triangles_per_materials;
 };
 
-inline void get_diffuse_from_tinyobj_material(process_t& process, int material, char* buffer) {
-	float *diffuse = process.tinyobj_materials[material].diffuse;
-	int			diffuse_as_int[3] = {
-		(int)(diffuse[0] * 255),
-		(int)(diffuse[1] * 255),
-		(int)(diffuse[2] * 255),
-	};
-	sprintf(buffer, "#%0.2X%0.2X%0.2X", diffuse_as_int[0], diffuse_as_int[1], diffuse_as_int[2]);
-}
-
 void process_optimize_mesh(process_t& process);
 void process_triangle_occlusion_null(process_t& process);
 void process_triangle_occlusion(process_t& process);
