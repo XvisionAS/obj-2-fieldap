@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <fstream>
 #include <limits>
-#include <cstdio>
 
 #include <vector>
 
@@ -59,7 +58,7 @@ inline void get_diffuse_from_tinyobj_material(process_t& process, int material, 
 		(int)(diffuse[1] * 255),
 		(int)(diffuse[2] * 255),
 	};
-	std::sprintf(buffer, "#%0.2X%0.2X%0.2X", diffuse_as_int[0], diffuse_as_int[1], diffuse_as_int[2]);
+	sprintf(buffer, "#%0.2X%0.2X%0.2X", diffuse_as_int[0], diffuse_as_int[1], diffuse_as_int[2]);
 }
 
 void process_optimize_mesh(process_t& process);
