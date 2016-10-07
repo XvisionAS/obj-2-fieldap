@@ -23,6 +23,7 @@ void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 	cmdparser.parse_check(ac, av);
 }
 
+
 int main(int ac, char** av) {
 	cmdline::parser cmdparser;
 
@@ -32,9 +33,10 @@ int main(int ac, char** av) {
 
 		process.swap_yz             = cmdparser.get<bool>("swap-yz");
 		process.debug_render_to_tga = cmdparser.get<bool>("debug_render_to_tga");
-		process.render_tex_size     = cmdparser.get<int>("render-texture-size");
+		process.render_tex_size     = cmdparser.get<int> ("render-texture-size");
 
 		process.file_name = input;
+		process_file_path_and_name(process);
 
 		if (!process_load_obj(process)) {
 			continue;
@@ -57,5 +59,7 @@ int main(int ac, char** av) {
 		}
 
 		process_output_svg(process);
+		process_output_threejs(process);
+		process_output_socket(process);
 	}
 }

@@ -50,9 +50,19 @@ public:
 	inline void set(float x_, float y_, float z_) {
 		x = x_, y = y_, z = z_;
 	}
+	inline void mul(float v) {
+		x *= v, y *= v, z *= v;
+	}
+	inline void add(const v3& other) {
+		x += other.x, y += other.y, z += other.z;
+	}
 
 	static v3 sub(const v3& a, const v3& b) {
 		return v3(a.x - b.x, a.y - b.y, a.z - b.z);
+	}
+
+	static v3 add(const v3& a, const v3& b) {
+		return v3(a.x + b.x, a.y + b.y, a.z + b.z);
 	}
 
 	static float dot2d(const v3& a, const v3& b) {

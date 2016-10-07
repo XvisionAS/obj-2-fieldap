@@ -57,6 +57,12 @@
     <ClCompile Include="process\process_output_threejs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="process\process_file_path_and_name.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="process\process_output_socket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\json.hpp">

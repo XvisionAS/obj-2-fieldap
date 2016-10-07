@@ -105,7 +105,7 @@ void process_output_svg(process_t& process) {
 	build_element_list(process, edges, elements);
 
 	std::ofstream svg;
-	svg.open(process.file_name + ".svg");
+	svg.open(process.file_name_without_ext + ".svg");
 	svg << "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"" << process.min.x << " " << process.min.y << " " << (process.max.x - process.min.x) << " " << (process.max.y - process.min.y) << "\" >";
 
 	std::sort(elements.begin(), elements.end(), [](auto a, auto b) { return a.z < b.z; });

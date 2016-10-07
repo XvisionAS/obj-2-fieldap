@@ -42,6 +42,7 @@ struct process_t {
 	std::vector<v3>										vertices;
 
 	std::string												file_name;
+	std::string												file_name_without_ext;
 	std::string												file_path;
 	bool																swap_yz;
 
@@ -56,10 +57,12 @@ void process_triangle_occlusion_null(process_t& process);
 void process_triangle_occlusion(process_t& process);
 void process_remove_degenerate_triangle(process_t& process);
 void process_debug_render_mesh_to_tga(process_t& process);
-void process_output_svg(process_t& process);
 void process_compute_min_max(process_t& process);
 void process_transform_points(process_t& process);
 void process_split_triangle_by_material(process_t& process);
 void process_generate_triangle_list(process_t& process);
 bool process_load_obj(process_t& process);
+void process_file_path_and_name(process_t& process);
+void process_output_svg(process_t& process);
 void process_output_threejs(process_t& process);
+void process_output_socket(process_t& process);

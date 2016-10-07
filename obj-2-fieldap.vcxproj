@@ -134,9 +134,11 @@
     <ClCompile Include="process\process_backface_culling.cpp" />
     <ClCompile Include="process\process_compute_min_max.cpp" />
     <ClCompile Include="process\process_debug_render_mesh_to_tga.cpp" />
+    <ClCompile Include="process\process_file_path_and_name.cpp" />
     <ClCompile Include="process\process_generate_triangle_list.cpp" />
     <ClCompile Include="process\process_load_obj.cpp" />
     <ClCompile Include="process\process_optimize_mesh.cpp" />
+    <ClCompile Include="process\process_output_socket.cpp" />
     <ClCompile Include="process\process_output_svg.cpp" />
     <ClCompile Include="process\process_output_threejs.cpp" />
     <ClCompile Include="process\process_remove_degenerate_triangle.cpp" />

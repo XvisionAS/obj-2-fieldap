@@ -260,7 +260,7 @@ class JSON
 
         int length() const {
             if( Type == Class::Array )
-                return Internal.List->size();
+                return (int) Internal.List->size();
             else
                 return -1;
         }
@@ -273,9 +273,9 @@ class JSON
 
         int size() const {
             if( Type == Class::Object )
-                return Internal.Map->size();
+                return (int) Internal.Map->size();
             else if( Type == Class::Array )
-                return Internal.List->size();
+                return (int) Internal.List->size();
             else
                 return -1;
         }
@@ -334,30 +334,27 @@ class JSON
             return JSONConstWrapper<deque<JSON>>( nullptr );
         }
 
-        string dump( int depth = 1, string tab = "  ") const {
-            string pad = "";
-            for( int i = 0; i < depth; ++i, pad += tab );
-
+        string dump() const {
             switch( Type ) {
                 case Class::Null:
                     return "null";
                 case Class::Object: {
-                    string s = "{\n";
+                    string s = "{";
                     bool skip = true;
                     for( auto &p : *Internal.Map ) {
-                        if( !skip ) s += ",\n";
-                        s += ( pad + "\"" + p.first + "\" : " + p.second.dump( depth + 1, tab ) );
+                        if( !skip ) s += ",";
+                        s += "\"" + p.first + "\" : " + p.second.dump();
                         skip = false;
                     }
-                    s += ( "\n" + pad.erase( 0, 2 ) + "}" ) ;
+                    s += "}";
                     return s;
                 }
                 case Class::Array: {
                     string s = "[";
                     bool skip = true;
                     for( auto &p : *Internal.List ) {
-                        if( !skip ) s += ", ";
-                        s += p.dump( depth + 1, tab );
+                        if( !skip ) s += ",";
+                        s += p.dump();
                         skip = false;
                     }
                     s += "]";
@@ -418,7 +415,7 @@ class JSON
         Class Type = Class::Null;
 };
 
-JSON Array() {
+inline JSON Array() {
     return std::move( JSON::Make( JSON::Class::Array ) );
 }
 
@@ -429,11 +426,11 @@ JSON Array( T... args ) {
     return std::move( arr );
 }
 
-JSON Object() {
+inline JSON Object() {
     return std::move( JSON::Make( JSON::Class::Object ) );
 }
 
-std::ostream& operator<<( std::ostream &os, const JSON &json ) {
+inline std::ostream& operator<<( std::ostream &os, const JSON &json ) {
     os << json.dump();
     return os;
 }
@@ -641,7 +638,7 @@ namespace {
     }
 }
 
-JSON JSON::Load( const string &str ) {
+inline JSON JSON::Load( const string &str ) {
     size_t offset = 0;
     return std::move( parse_next( str, offset ) );
 }
