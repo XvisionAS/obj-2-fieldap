@@ -144,12 +144,16 @@
     <ClCompile Include="process\process_triangle_occlusion.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="externals\cmdline.h" />
     <ClInclude Include="externals\json.hpp" />
     <ClInclude Include="externals\stb_image_write.h" />
     <ClInclude Include="externals\tiny_obj_loader.h" />
     <ClInclude Include="process\process.h" />
     <ClInclude Include="libs\rasterizer.h" />
     <ClInclude Include="libs\v3.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -74,5 +74,11 @@
     <ClInclude Include="process\process.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="externals\cmdline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

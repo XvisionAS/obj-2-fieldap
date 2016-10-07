@@ -37,7 +37,7 @@ struct process_t {
 	std::string												tinyobj_err;
 
 	int																render_tex_size;
-
+	bool																debug_render_to_tga;
 	triangles_t												triangles;
 	std::vector<point_t>								points;
 	std::vector<v3>										vertices;
