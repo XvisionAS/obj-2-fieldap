@@ -4,9 +4,6 @@ os:
   - linux
   - osx
 
-
-sudo: required
-dist: trusty
 compiler: clang
 
 addons:
@@ -17,7 +14,8 @@ addons:
     - build/obj-2-fieldap.$TRAVIS_OS_NAME
 
 script:
-  clang++ -std=c++14 process/*.cpp externals/*.cc main.cpp -lstdc++ -o build/obj-2-fieldap.$TRAVIS_OS_NAME
-
+  - if [ $TRAVIS_OS_NAME == linux ]; then clang++ -std=c++1y process/*.cpp externals/*.cc main.cpp -lstdc++ -o build/obj-2-fieldap.$TRAVIS_OS_NAME; fi
+  - if [ $TRAVIS_OS_NAME == osx ];   then clang++ -std=c++14 process/*.cpp externals/*.cc main.cpp -lstdc++ -o build/obj-2-fieldap.$TRAVIS_OS_NAME; fi
+    
 notifications:
   email: false

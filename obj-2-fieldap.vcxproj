@@ -138,6 +138,7 @@
     <ClCompile Include="process\process_load_obj.cpp" />
     <ClCompile Include="process\process_optimize_mesh.cpp" />
     <ClCompile Include="process\process_output_svg.cpp" />
+    <ClCompile Include="process\process_output_threejs.cpp" />
     <ClCompile Include="process\process_remove_degenerate_triangle.cpp" />
     <ClCompile Include="process\process_split_triangle_by_material.cpp" />
     <ClCompile Include="process\process_transform_points.cpp" />

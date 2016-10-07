@@ -72,3 +72,4 @@ void process_transform_points(process_t& process);
 void process_split_triangle_by_material(process_t& process);
 void process_generate_triangle_list(process_t& process);
 bool process_load_obj(process_t& process);
+void process_output_threejs(process_t& process);
