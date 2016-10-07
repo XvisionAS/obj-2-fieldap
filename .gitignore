@@ -4,6 +4,8 @@
 # User-specific files
 *.suo
 *.user
+*.iobj
+*.ipdb
 *.userosscache
 *.sln.docstates
 
