@@ -56,6 +56,9 @@ public:
 	inline void add(const v3& other) {
 		x += other.x, y += other.y, z += other.z;
 	}
+	inline void add(float* other) {
+		x += *other++, y += *other++, z += *other++;
+	}
 
 	static v3 sub(const v3& a, const v3& b) {
 		return v3(a.x - b.x, a.y - b.y, a.z - b.z);

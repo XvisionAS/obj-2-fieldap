@@ -20,6 +20,12 @@ void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 		false,
 		false);
 
+	cmdparser.add<bool>("center-xy",
+		'd',
+		"Center object on XY axis",
+		false,
+		false);
+
 	cmdparser.parse_check(ac, av);
 }
 
@@ -34,6 +40,7 @@ int main(int ac, char** av) {
 		process.swap_yz             = cmdparser.get<bool>("swap-yz");
 		process.debug_render_to_tga = cmdparser.get<bool>("debug_render_to_tga");
 		process.render_tex_size     = cmdparser.get<int> ("render-texture-size");
+		process.center_xy						= cmdparser.get<bool>("center-xy");
 
 		process.file_name = input;
 		process_file_path_and_name(process);
@@ -42,7 +49,14 @@ int main(int ac, char** av) {
 			continue;
 		}
 
-		process_compute_min_max(process);		
+		if (process.swap_yz) {
+			process_swap_yz(process);
+		}
+
+		if (process.center_xy) {
+			process_center_xy(process);
+		}
+		process_compute_min_max(process);
 		process_transform_points(process);
 		process_generate_triangle_list(process);
 		// process_backface_culling(process);
