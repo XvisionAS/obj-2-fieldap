@@ -34,7 +34,8 @@ void process_generate_triangle_list(process_t& process) {
 				t1.bn = shape.mesh.indices[offset + 1].normal_index;
 				t1.cn = shape.mesh.indices[offset + 2].normal_index;
 
-				t1.max_z = std::max(attrib.vertices[t1.a + 2], std::max(attrib.vertices[t1.b + 2], attrib.vertices[t1.c + 2]));
+				t1.max_z = std::max(attrib.vertices[t1.a * 3 + 2], std::max(attrib.vertices[t1.b * 3 + 2], attrib.vertices[t1.c * 3 + 2]));
+				t1.min_z = std::min(attrib.vertices[t1.a * 3 + 2], std::min(attrib.vertices[t1.b * 3 + 2], attrib.vertices[t1.c * 3 + 2]));
 				t1.material = material;
 				t1.valid = 1;
 			}
@@ -48,7 +49,9 @@ void process_generate_triangle_list(process_t& process) {
 				t1.bn = shape.mesh.indices[offset + 1].normal_index;
 				t1.cn = shape.mesh.indices[offset + 3].normal_index;
 
-				t1.max_z = std::max(attrib.vertices[t1.a + 2], std::max(attrib.vertices[t1.b + 2], attrib.vertices[t1.c + 2]));
+				t1.max_z = std::max(attrib.vertices[t1.a * 3 + 2], std::max(attrib.vertices[t1.b * 3 + 2], attrib.vertices[t1.c * 3 + 2]));
+				t1.min_z = std::min(attrib.vertices[t1.a * 3 + 2], std::min(attrib.vertices[t1.b * 3 + 2], attrib.vertices[t1.c * 3 + 2]));
+
 				t1.material = material;
 				t1.valid = 1;
 
@@ -61,7 +64,9 @@ void process_generate_triangle_list(process_t& process) {
 				t2.bn = shape.mesh.indices[offset + 2].normal_index;
 				t2.cn = shape.mesh.indices[offset + 3].normal_index;
 
-				t2.max_z = std::max(attrib.vertices[t2.a + 2], std::max(attrib.vertices[t2.b + 2], attrib.vertices[t2.c + 2]));
+				t2.max_z = std::max(attrib.vertices[t2.a * 3 + 2], std::max(attrib.vertices[t2.b * 3 + 2], attrib.vertices[t2.c * 3 + 2]));
+				t2.min_z = std::min(attrib.vertices[t2.a * 3 + 2], std::min(attrib.vertices[t2.b * 3 + 2], attrib.vertices[t2.c * 3 + 2]));
+
 				t2.material = material;
 				t2.valid = 1;
 			}
@@ -72,6 +77,6 @@ void process_generate_triangle_list(process_t& process) {
 	std::sort(
 		process.triangles.begin(),
 		process.triangles.end(),
-		[](const triangle_t& a, triangle_t& b) -> bool { return a.max_z > b.max_z; }
+		[](const triangle_t& a, triangle_t& b) -> bool { return a.max_z < b.max_z; }
 	);
 }

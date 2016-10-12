@@ -62,17 +62,18 @@ int main(int ac, char** av) {
 		// process_backface_culling(process);
 		// triangle_occlusion_null(process);
 		
-		process_triangle_occlusion(process);			
-				
-		process_split_triangle_by_material(process);
-		
-		// optimize_mesh(process);		
-		process_remove_degenerate_triangle(process);
 		if (process.debug_render_to_tga) {
 			process_debug_render_mesh_to_tga(process);
 		}
+		process_triangle_occlusion(process);
 
+		process_split_triangle_by_material(process);		
+		// process_optimize_mesh(process);		
+		process_remove_degenerate_triangle(process);
+
+		process_output_svg_triangle(process);
 		process_output_svg(process);
+		
 		process_output_threejs(process);
 		process_output_socket(process);
 	}

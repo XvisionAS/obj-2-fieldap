@@ -1,87 +1,178 @@
 #include "process.h"
+#include <list>
+#include <set>
 
-struct edge_info_t {
-	int material;
-	int count;
+struct edge_t {
+	edge_t(int a_, int b_, int m_)  : a(a_), b(b_), m(m_), count(0) {
+	}
+
+	int		a, b, m;
+	int		count;
+
+	bool operator<(const edge_t &that)  const {
+		if (a != that.a) {
+			return a < that.a;
+		}
+		else if (b != that.b) {
+			return b < that.b;
+		}
+		else if (m != that.m) {
+			return m < that.m;
+		}
+		return false;
+	}
 };
 
-typedef std::pair<int, int>						edge_t;
-typedef std::map<edge_t, edge_info_t> edge_infos_t;
+typedef std::set<edge_t> edge_infos_t;
 
 struct element_t {
 	int								material;
 	float							z;
 	size_t							id;
-	std::vector<int>		indices;
-	std::vector<v3>		vertices;
+	std::vector<v3>									contour;
+	std::vector<std::vector<v3> >		holes;
 };
 
 typedef std::vector<element_t> elements_t;
 
 static	 void build_edge_list(process_t& process, edge_infos_t& edges) {
+	std::map<edge_t, int>	edges_map;
 	for (auto triangle : process.triangles) {
 		if (triangle.valid) {
 			auto addEdge = [&](int a, int b, int material) {
 				if (a > b) {
 					std::swap(a, b);
 				}
-				auto& e = edges[edge_t(a, b)];
-				e.count++;
-				e.material = material;
+				edges_map[edge_t(a, b, material)] ++;
 			};
 			addEdge(triangle.a, triangle.b, triangle.material);
 			addEdge(triangle.b, triangle.c, triangle.material);
 			addEdge(triangle.c, triangle.a, triangle.material);
 		}
 	}
+	for (auto e : edges_map) {
+		edge_t edge = e.first;
+		edge.count = e.second;
+		edges.insert(edge);
+	}
+	
 }
 
-static void remove_shared_edge(edge_infos_t& edges) {
+static void remove_shared_edge(std::list<edge_t>& edges) {
 	auto iter = edges.begin(), end = edges.end();
 	while (iter != end) {
-		if (iter->second.count > 1) {
-			edges.erase(iter++);
-		}
-		else {
+		if (iter->count > 1) {
+			iter = edges.erase(iter);
+		} else {
 			++iter;
 		}
 	}
 }
 
+struct aabb {
+	v3 	min;
+	v3		max;
+	int index;
+	void init() {
+		min.set(std::numeric_limits<float>::max());
+		max.set(-std::numeric_limits<float>::max());
+	}
+	void add(const v3& v) {
+		min.min(v);
+		max.max(v);
+	}
+
+	void size(v3& v) const {
+		v.x = fabsf(max.x - min.x);
+		v.y = fabsf(max.y - min.y);
+		v.z = fabsf(max.z - min.z);
+	}
+	
+	bool bigger(const aabb& that) const {
+		v3 a, b;
+		
+		size(a);
+		that.size(b);
+		return (a.x + a.y) > (b.x + b.y);
+	}
+
+	
+};
+
 static void build_element_list(process_t& process, edge_infos_t& edges, elements_t& elements) {
-	auto iter = edges.begin(), end = edges.end();
-	while (iter != end) {
-		std::vector<int> stack;
-
-		int material = iter->second.material;
-		stack.push_back(iter->first.first);
-		stack.push_back(iter->first.second);
-		edges.erase(iter);
-
-		int found = 1;
+	
+	
+	while (!edges.empty()) {
+		std::list<edge_t> stack_edge;		
+		auto								iter = edges.begin();
+		int								material = iter->m;
+		int								to_find = iter->b;
+		int								found = 1;
+		
+		stack_edge.push_back(*iter);
+		edges.erase(iter);		
 		while (found) {
-			int		to_find = stack.back();
-			auto		it = std::find_if(edges.begin(), edges.end(), [=](auto& e) -> bool { return to_find == e.first.first || to_find == e.first.second; });
+			auto		it = std::find_if(edges.begin(), edges.end(), [=](auto& e) -> bool { return (to_find == e.a || to_find == e.b) && (e.m == material); });
 			found = it != edges.end();
 			if (found) {
-				stack.push_back(it->first.first == to_find ? it->first.second : it->first.first);
+				to_find = (it->a == to_find) ? it->b: it->a;
+				stack_edge.push_back(*it);
 				edges.erase(it);
 			}
-		}
-		stack.pop_back();
+		}				
 
-		elements.push_back(element_t());
-		element_t& element = elements.back();
-		element.id = elements.size();
-		element.material = material;
-		element.z = -std::numeric_limits<float>::max();
-		for (auto eit : stack) {
-			const auto& a = process.vertices[eit];
-			element.indices.push_back(eit);
-			element.vertices.push_back(a);
-			element.z = std::max(element.z, a.z);
+		remove_shared_edge(stack_edge);
+
+		std::vector<std::list<int> >		stacks;
+		std::vector<aabb	>							aabbs;
+		while (!stack_edge.empty()) {
+			stacks.push_back(std::list<int>());
+			stacks.back().push_back(stack_edge.front().a);
+			stacks.back().push_back(stack_edge.front().b);
+			stack_edge.erase(stack_edge.begin());		
+			found = 1;
+			while (found) {
+				to_find = stacks.back().back();
+				auto		it = std::find_if(stack_edge.begin(), stack_edge.end(), [=](auto& e) -> bool { return to_find == e.a || to_find == e.b; });
+				found = it != stack_edge.end();
+				if (found) {
+					stacks.back().push_back((it->a == to_find) ? it->b : it->a);
+					stack_edge.erase(it);
+				}
+			}
+			stacks.back().pop_back();
+
+			aabbs.push_back(aabb());
+			aabbs.back().index = (int)aabbs.size() - 1;
+			aabbs.back().init();
+			for (auto eit : stacks.back()) {
+				aabbs.back().add(process.vertices[eit]);
+			}
 		}
-		iter = edges.begin();
+
+		std::sort(aabbs.begin(), aabbs.end(), [](const auto& a, const auto& b) -> bool { return a.bigger(b); });
+		if (!stacks.empty()) {
+			elements.push_back(element_t());
+			element_t& element = elements.back();
+			element.id = elements.size();
+			element.material = material;
+			element.z = -std::numeric_limits<float>::max();
+			
+			for (int index = 0; index < aabbs.size(); ++index) {
+				if (index != 0) {
+					element.holes.push_back(std::vector<v3>());
+				}
+				for (auto eit : stacks[aabbs[index].index]) {
+					const auto& a = process.vertices[eit];					
+					if (index == 0) {
+						element.contour.push_back(a);
+						element.z = std::max(element.z, a.z);
+					} else {
+						element.holes.back().push_back(a);
+					}
+				}		
+			}
+		}	
 	}
 }
 
@@ -98,8 +189,7 @@ static void get_diffuse_from_tinyobj_material(process_t& process, int material, 
 void process_output_svg(process_t& process) {
 	edge_infos_t		edges;
 
-	build_edge_list(process, edges);
-	remove_shared_edge(edges);
+	build_edge_list(process, edges);	
 	
 	elements_t elements;
 	build_element_list(process, edges, elements);
@@ -124,11 +214,27 @@ void process_output_svg(process_t& process) {
 			svg << "<g id=\"" << id << "\" stroke=\"black\" fill=\"" << color << "\" stroke-width=\"0.01\">";
 			id++;
 		}
-		svg << "<polygon points=\"";
-		for (auto a : element.vertices) {
-			svg << a.x << "," << a.y << " ";
+		if (element.holes.empty()) {
+			svg << "<polygon points=\"";
+			for (auto a : element.contour) {
+				svg << a.x << "," << a.y << " ";
+			}
+			svg << "\"/>";
+			svg << "<!-- z === " << element.z << "-->";
 		}
-		svg << "\"/>";
+		else {
+			auto outputPath = [](auto& stream, auto& vertices) {
+				stream << "M " << vertices[0].x << " " << vertices[0].y;
+				for (auto i = 1; i < vertices.size(); ++i) {
+					stream << " L " << vertices[i].x << " " << vertices[i].y;
+				}
+				stream << " Z";
+			};
+
+			svg << "<path d=\"";
+			outputPath(svg, element.contour);
+			svg << "\"/>";
+		}
 	}
 	svg << "</g></svg>";
 }

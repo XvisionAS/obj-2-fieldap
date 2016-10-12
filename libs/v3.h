@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+
 struct v3 {
 public:
 	float x, y, z;
@@ -76,3 +77,5 @@ public:
 		return (x * that.x) + (y * that.y);
 	}
 };
+
+

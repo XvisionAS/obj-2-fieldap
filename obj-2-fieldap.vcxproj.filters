@@ -69,6 +69,9 @@
     <ClCompile Include="process\process_swap_yz.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="process\process_output_svg_triangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\json.hpp">

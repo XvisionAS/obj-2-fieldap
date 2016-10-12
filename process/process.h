@@ -23,6 +23,7 @@ struct triangle_t {
 	int			a, b, c;
 	int			an, bn, cn;
 	float		max_z;
+	float		min_z;
 	int			material;
 	int			valid;
 };
@@ -65,6 +66,7 @@ void process_generate_triangle_list(process_t& process);
 bool process_load_obj(process_t& process);
 void process_file_path_and_name(process_t& process);
 void process_output_svg(process_t& process);
+void process_output_svg_triangle(process_t& process);
 void process_center_xy(process_t& process);
 void process_output_threejs(process_t& process);
 void process_output_socket(process_t& process);
