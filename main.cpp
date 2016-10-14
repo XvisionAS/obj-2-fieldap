@@ -26,6 +26,18 @@ void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 		false,
 		false);
 
+	cmdparser.add<bool>("gamma-correct",
+		'e',
+		"Use gamma correction when exporting SVG",
+		false,
+		true);
+
+	cmdparser.add<float>("gamma",
+		'f',
+		"Gamma value for SVG export",
+		false,
+		2.2f);
+
 	cmdparser.parse_check(ac, av);
 }
 
@@ -41,7 +53,8 @@ int main(int ac, char** av) {
 		process.debug_render_to_tga = cmdparser.get<bool>("debug_render_to_tga");
 		process.render_tex_size     = cmdparser.get<int> ("render-texture-size");
 		process.center_xy						= cmdparser.get<bool>("center-xy");
-
+		process.gamma								= cmdparser.get<float>("gamma");
+		process.use_gamma_correction	= cmdparser.get<bool>("gamma-correct");
 		process.file_name = input;
 		process_file_path_and_name(process);
 

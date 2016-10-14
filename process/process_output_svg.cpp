@@ -87,10 +87,23 @@ static void build_element_list(process_t& process, edge_infos_t& edges, elements
 
 static void get_diffuse_from_tinyobj_material(process_t& process, int material, char* buffer) {
 	float *diffuse = process.tinyobj_materials[material].diffuse;
+	float actual_diffuse[] = {
+		diffuse[0], diffuse[1], diffuse[2]
+	};
+
+	if (process.use_gamma_correction) {
+		actual_diffuse[0] = pow(actual_diffuse[0], 1.0f / process.gamma);
+		actual_diffuse[1] = pow(actual_diffuse[1], 1.0f / process.gamma);
+		actual_diffuse[2] = pow(actual_diffuse[2], 1.0f / process.gamma);
+	}
+	actual_diffuse[0] = std::min(1.0f, std::max(0.0f, actual_diffuse[0]));
+	actual_diffuse[1] = std::min(1.0f, std::max(0.0f, actual_diffuse[1]));
+	actual_diffuse[2] = std::min(1.0f, std::max(0.0f, actual_diffuse[2]));
+
 	int			diffuse_as_int[3] = {
-		(int)(diffuse[0] * 255),
-		(int)(diffuse[1] * 255),
-		(int)(diffuse[2] * 255),
+		(int)(actual_diffuse[0] * 255),
+		(int)(actual_diffuse[1] * 255),
+		(int)(actual_diffuse[2] * 255),
 	};
 	sprintf(buffer, "#%.2X%.2X%.2X", diffuse_as_int[0], diffuse_as_int[1], diffuse_as_int[2]);
 }

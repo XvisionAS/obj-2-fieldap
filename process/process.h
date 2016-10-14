@@ -50,6 +50,9 @@ struct process_t {
 	v3																	min;
 	v3																	max;
 
+	float															gamma;
+	bool																use_gamma_correction;
+
 	std::map<int, triangles_t>				triangles_per_materials;
 };
 
