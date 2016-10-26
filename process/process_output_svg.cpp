@@ -61,7 +61,8 @@ static void build_element_list(process_t& process, edge_infos_t& edges, elements
 		int found = 1;
 		while (found) {
 			int		to_find = stack.back();
-			auto		it = std::find_if(edges.begin(), edges.end(), [=](auto& e) -> bool { return to_find == e.first.first || to_find == e.first.second; });
+			
+			auto		it = std::find_if(edges.begin(), edges.end(), [=](auto& e) -> bool { return (to_find == e.first.first || to_find == e.first.second) && (e.second.material == material); });
 			found = it != edges.end();
 			if (found) {
 				stack.push_back(it->first.first == to_find ? it->first.second : it->first.first);

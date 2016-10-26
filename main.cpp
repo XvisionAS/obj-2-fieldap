@@ -69,6 +69,7 @@ int main(int ac, char** av) {
 		if (process.center_xy) {
 			process_center_xy(process);
 		}
+		process_from_tinyobj_to_v3(process);
 		process_compute_min_max(process);
 		process_transform_points(process);
 		process_generate_triangle_list(process);
@@ -84,8 +85,8 @@ int main(int ac, char** av) {
 		if (process.debug_render_to_tga) {
 			process_debug_render_mesh_to_tga(process);
 		}
-
 		process_output_svg(process);
+		// process_output_svg2(process);
 		process_output_threejs(process);
 		process_output_socket(process);
 	}

@@ -69,6 +69,12 @@
     <ClCompile Include="process\process_swap_yz.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="process\process_output_svg2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="process\process_from_tinyobj_to_v3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\json.hpp">
@@ -90,6 +96,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="externals\cmdline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\aabb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

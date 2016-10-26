@@ -5,14 +5,25 @@ void process_compute_min_max(process_t& process) {
 	process.min.set(std::numeric_limits<float>::max());
 	process.max.set(-std::numeric_limits<float>::max());
 
-	float* vertices_start = &(process.tinyobj_attrib.vertices[0]);
-	float* vertices_end = vertices_start + process.tinyobj_attrib.vertices.size();
-	process.vertices.reserve(process.tinyobj_attrib.vertices.size() / 3);
 
-	for (float* vertex = vertices_start; vertex != vertices_end; vertex += 3) {
-		v3 v(vertex);
-		process.vertices.push_back(v);
-		process.min.min(v);
-		process.max.max(v);
+	for (const auto& shape : process.tinyobj_shapes) {
+		size_t pos = shape.name.find("tag_");
+		if (pos == 0) {
+			continue;
+		}
+		size_t		faces_count = shape.mesh.num_face_vertices.size();
+		int			offset = 0;
+		for (size_t face = 0; face < faces_count; ++face) {
+			int num_face_vertices = shape.mesh.num_face_vertices[face];
+			int material = shape.mesh.material_ids[face];
+
+			for (int i = 0; i < num_face_vertices; ++i) {
+				int a = shape.mesh.indices[offset++].vertex_index;
+				const auto& v = process.vertices[a];
+				process.min.min(v);
+				process.max.max(v);
+			}
+		}
 	}
 }
+

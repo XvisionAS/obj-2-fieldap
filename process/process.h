@@ -35,27 +35,28 @@ struct process_t {
 	tinyobj::attrib_t									tinyobj_attrib;
 	std::string												tinyobj_err;
 
-	int																render_tex_size;
-	bool																debug_render_to_tga;
-	triangles_t												triangles;
-	std::vector<point_t>								points;
-	std::vector<v3>										vertices;
+	int															render_tex_size;
+	bool															debug_render_to_tga;
+	triangles_t											triangles;
+	std::vector<point_t>							points;
+	std::vector<v3>									vertices;
 
-	std::string												file_name;
-	std::string												file_name_without_ext;
-	std::string												file_path;
-	bool																swap_yz;
-	bool																center_xy;
+	std::string											file_name;
+	std::string											file_name_without_ext;
+	std::string											file_path;
+	bool															swap_yz;
+	bool															center_xy;
 
-	v3																	min;
-	v3																	max;
+	v3																min;
+	v3																max;
 
-	float															gamma;
-	bool																use_gamma_correction;
+	float														gamma;
+	bool															use_gamma_correction;
 
 	std::map<int, triangles_t>				triangles_per_materials;
 };
 
+void process_from_tinyobj_to_v3(process_t& process);
 void process_optimize_mesh(process_t& process);
 void process_triangle_occlusion_null(process_t& process);
 void process_triangle_occlusion(process_t& process);
@@ -68,7 +69,9 @@ void process_generate_triangle_list(process_t& process);
 bool process_load_obj(process_t& process);
 void process_file_path_and_name(process_t& process);
 void process_output_svg(process_t& process);
+void process_output_svg2(process_t& process);
 void process_center_xy(process_t& process);
 void process_output_threejs(process_t& process);
 void process_output_socket(process_t& process);
 void process_swap_yz(process_t& process);
+

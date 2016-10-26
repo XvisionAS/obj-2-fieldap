@@ -15,5 +15,25 @@ void process_debug_render_mesh_to_tga(process_t& process) {
 		}
 	}
 
-	stbi_write_tga((process.file_name + ".tga").c_str(), process.render_tex_size, process.render_tex_size, 4, &(frame_buffer.pixels[0]));
+	stbi_write_tga((process.file_name + ".diffuse.tga").c_str(), process.render_tex_size, process.render_tex_size, 4, &(frame_buffer.pixels[0]));
+
+	float min = std::numeric_limits<float>::max();
+	float max = -std::numeric_limits<float>::max();
+
+	for (int i = 0; i < frame_buffer.width * frame_buffer.height; ++i) {
+		if (frame_buffer.pixels[i] != -1) {
+			min = std::min(frame_buffer.depths[i], min);
+			max = std::max(frame_buffer.depths[i], max);
+		}
+	}
+
+
+	std::vector<unsigned char>		depth_as_char;
+	depth_as_char.resize(frame_buffer.width * frame_buffer.height, 0);
+	for (int i = 0; i < frame_buffer.width * frame_buffer.height; ++i) {
+		if (frame_buffer.pixels[i] != -1) {
+			depth_as_char[i] = (unsigned char)(((frame_buffer.depths[i] - min) / (max - min)) * 255);
+		}
+	}
+	stbi_write_tga((process.file_name + ".depth.tga").c_str(), process.render_tex_size, process.render_tex_size, 1, &(depth_as_char[0]));
 }
