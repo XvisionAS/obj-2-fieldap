@@ -5,7 +5,6 @@
 
 void process_debug_render_mesh_to_tga(process_t& process) {
 	frame_buffer_t		frame_buffer(process.render_tex_size, process.render_tex_size);
-	int					len = (int)process.triangles.size();
 
 	for (const auto &triangle : process.triangles) {
 		float		*color = process.tinyobj_materials[triangle.material].diffuse;

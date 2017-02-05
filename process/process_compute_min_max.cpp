@@ -15,7 +15,6 @@ void process_compute_min_max(process_t& process) {
 		int			offset = 0;
 		for (size_t face = 0; face < faces_count; ++face) {
 			int num_face_vertices = shape.mesh.num_face_vertices[face];
-			int material = shape.mesh.material_ids[face];
 
 			for (int i = 0; i < num_face_vertices; ++i) {
 				int a = shape.mesh.indices[offset++].vertex_index;

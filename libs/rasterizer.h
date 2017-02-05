@@ -82,7 +82,7 @@ inline void rasterize(frame_buffer_t& fb, const point_t& v0, const point_t& v1, 
 			if ( ((alpha | beta | gama) >= 0) && depth > fb.depths[index]) {
 					fb.depths[index] = depth;
 					fb.pixels[index] = value;
-			}			
+			}
 			alpha += A0, beta += A1, gama += A2, depth += zx, index++;
 		}
 		alpha0 += B0, beta0 += B1, gama0 += B2, rowIdx += fb.width;
