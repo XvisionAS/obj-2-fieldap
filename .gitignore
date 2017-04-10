@@ -8,7 +8,8 @@
 *.ipdb
 *.userosscache
 *.sln.docstates
-
+vgcore.*
+obj-2-fieldap
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -23,7 +24,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
-
+build/
 # Visual Studio 2015 cache/options directory
 .vs/
 .vscode/
