@@ -1,21 +1,45 @@
 #include "process.h"
 #include "../externals/json.hpp"
 
-void process_output_socket(process_t& process) {
-	json::JSON json;
 
-	for (const auto& shape : process.tinyobj_shapes) {
-		size_t pos = shape.name.find("tag_");
-		if (pos != 0) {
+std::vector<std::string> split_string(const std::string& str, const std::string& delimiters) {
+	std::vector<std::string> split;
+	size_t p = 0, c;
+	do {
+		c = str.find_first_of(delimiters, p);
+		split.push_back(
+			str.substr(
+				p,
+				((c == std::string::npos) ? str.size() : c) - p
+			)
+		);
+		p = c + 1;
+	} while (c != std::string::npos);
+	return split;
+}
+
+
+void process_output_socket(process_t& process) {
+	json::JSON json;	
+	for (const auto& shape : process.tinyobj_shapes) {				
+		auto split = split_string(shape.name, "_");
+		if (split.empty() || split[0].compare("tag") != 0) {
 			continue;
 		}
-		std::string name = shape.name.substr(pos + 4);
+
+		std::string name = split[1];
+		json::JSON	tag;
+
 		
-		json::JSON tag;
 		tag["name"] = name;
+		if (split.size() > 2) {
+			tag["types"] = json::Array(
+				std::atoi(split[2].c_str())
+			);
+		}		
 		// compute center
 		size_t		faces_count = shape.mesh.num_face_vertices.size();		
-		v3				center(0.0f);
+		v3			center(0.0f);
 		int			offset = 0;
 		for (size_t face = 0; face < faces_count; ++face) {
 			int num_face_vertices = shape.mesh.num_face_vertices[face];

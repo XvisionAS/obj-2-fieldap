@@ -220,7 +220,7 @@ void process_output_svg2(process_t& process) {
 		//else {
 			auto outputPath = [](auto& stream, auto& vertices) {
 				stream << "M " << vertices[0].x << " " << vertices[0].y;
-				for (auto i = 1; i < vertices.size(); ++i) {
+				for (size_t i = 1; i < vertices.size(); ++i) {
 					stream << " L " << vertices[i].x << " " << vertices[i].y;
 				}
 				stream << " Z";

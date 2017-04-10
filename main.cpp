@@ -49,11 +49,11 @@ int main(int ac, char** av) {
 	for (auto& input : cmdparser.rest()) {
 		process_t process;
 
-		process.swap_yz             = cmdparser.get<bool>("swap-yz");
-		process.debug_render_to_tga = cmdparser.get<bool>("debug_render_to_tga");
-		process.render_tex_size     = cmdparser.get<int> ("render-texture-size");
-		process.center_xy						= cmdparser.get<bool>("center-xy");
-		process.gamma								= cmdparser.get<float>("gamma");
+		process.swap_yz					= cmdparser.get<bool>("swap-yz");
+		process.debug_render_to_tga		= cmdparser.get<bool>("debug_render_to_tga");
+		process.render_tex_size			= cmdparser.get<int> ("render-texture-size");
+		process.center_xy				= cmdparser.get<bool>("center-xy");
+		process.gamma					= cmdparser.get<float>("gamma");
 		process.use_gamma_correction	= cmdparser.get<bool>("gamma-correct");
 		process.file_name = input;
 		process_file_path_and_name(process);
