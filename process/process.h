@@ -30,30 +30,32 @@ struct triangle_t {
 typedef std::vector<triangle_t>	triangles_t;
 
 struct process_t {
-	std::vector<tinyobj::material_t>		tinyobj_materials;
+	std::vector<tinyobj::material_t>	tinyobj_materials;
 	std::vector<tinyobj::shape_t>			tinyobj_shapes;
 	tinyobj::attrib_t									tinyobj_attrib;
 	std::string												tinyobj_err;
 
 	int															render_tex_size;
-	bool															debug_render_to_tga;
+	bool														debug_render_to_tga;
 	triangles_t											triangles;
-	std::vector<point_t>							points;
+	std::vector<point_t>						points;
 	std::vector<v3>									vertices;
 
 	std::string											file_name;
 	std::string											file_name_without_ext;
 	std::string											file_path;
-	bool															swap_yz;
-	bool															center_xy;
+	bool														swap_yz;
+	bool														center_xy;
 
-	v3																min;
-	v3																max;
+	v3															min;
+	v3															max;
 
 	float														gamma;
-	bool															use_gamma_correction;
+	bool														use_gamma_correction;
 
-	std::map<int, triangles_t>				triangles_per_materials;
+	bool														glue;
+
+	std::map<int, triangles_t>			triangles_per_materials;
 };
 
 void process_from_tinyobj_to_v3(process_t& process);
@@ -74,4 +76,4 @@ void process_center_xy(process_t& process);
 void process_output_threejs(process_t& process);
 void process_output_socket(process_t& process);
 void process_swap_yz(process_t& process);
-
+void process_glue_to_ground(process_t& process);

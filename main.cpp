@@ -14,7 +14,7 @@ void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 		false,
 		true);
 
-	cmdparser.add<bool>("debug_render_to_tga",
+	cmdparser.add<bool>("debug-render-to-tga",
 		'c',
 		"DEBUG: Use the software rasterizer to render the object to TGA",
 		false,
@@ -38,6 +38,12 @@ void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 		false,
 		2.2f);
 
+	cmdparser.add<bool>("glue-to-ground",
+		'g',
+		"Glue object to ground (0)",
+		false,
+		false);
+
 	cmdparser.parse_check(ac, av);
 }
 
@@ -49,13 +55,14 @@ int main(int ac, char** av) {
 	for (auto& input : cmdparser.rest()) {
 		process_t process;
 
-		process.swap_yz					= cmdparser.get<bool>("swap-yz");
-		process.debug_render_to_tga		= cmdparser.get<bool>("debug_render_to_tga");
+		process.swap_yz							= cmdparser.get<bool>("swap-yz");
+		process.debug_render_to_tga	= cmdparser.get<bool>("debug-render-to-tga");
 		process.render_tex_size			= cmdparser.get<int> ("render-texture-size");
-		process.center_xy				= cmdparser.get<bool>("center-xy");
-		process.gamma					= cmdparser.get<float>("gamma");
-		process.use_gamma_correction	= cmdparser.get<bool>("gamma-correct");
-		process.file_name = input;
+		process.center_xy						= cmdparser.get<bool>("center-xy");
+		process.gamma								= cmdparser.get<float>("gamma");
+		process.use_gamma_correction= cmdparser.get<bool>("gamma-correct");
+		process.glue 								= cmdparser.get<bool>("glue-to-ground");
+		process.file_name 					= input;
 		process_file_path_and_name(process);
 
 		if (!process_load_obj(process)) {
@@ -71,16 +78,19 @@ int main(int ac, char** av) {
 		}
 		process_from_tinyobj_to_v3(process);
 		process_compute_min_max(process);
+		if (process.glue) {
+			process_glue_to_ground(process);
+		}
 		process_transform_points(process);
 		process_generate_triangle_list(process);
 		// process_backface_culling(process);
 		// triangle_occlusion_null(process);
-		
-		process_triangle_occlusion(process);			
-				
+
+		process_triangle_occlusion(process);
+
 		process_split_triangle_by_material(process);
-		
-		// optimize_mesh(process);		
+
+		// optimize_mesh(process);
 		process_remove_degenerate_triangle(process);
 		if (process.debug_render_to_tga) {
 			process_debug_render_mesh_to_tga(process);

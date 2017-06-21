@@ -19,12 +19,13 @@ SRCS=main.cpp \
 	process/process_swap_yz.cpp \
 	process/process_transform_points.cpp \
 	process/process_triangle_occlusion.cpp \
+	process/process_glue_to_ground.cpp \
 	externals/tiny_obj_loader.cc
-		
+
 CPP_OBJS=$(SRCS:%.cpp=$(BUILD_DIR)/%.o)
 OBJS=$(CPP_OBJS:%.cc=$(BUILD_DIR)/%.o)
 DEPS=$(OBJS:%.o=%.d)
-CPPFLAGS=-I. -g -O0 -Wall -Werror -Wextra
+CPPFLAGS=-I. -g -O3 -Wall -Werror -Wextra
 RM=rm -f
 
 all: $(TARGET)
