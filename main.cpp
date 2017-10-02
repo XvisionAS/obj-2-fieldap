@@ -6,7 +6,7 @@ void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 		'a',
 		"Size of the texture, in pixels, that will be use to determine if a face is visible. Bigger is better, but slower",
 		false,
-		4096);
+		1024);
 
 	cmdparser.add<bool>("swap-yz",
 		'b',
@@ -55,14 +55,14 @@ int main(int ac, char** av) {
 	for (auto& input : cmdparser.rest()) {
 		process_t process;
 
-		process.swap_yz							= cmdparser.get<bool>("swap-yz");
+		process.swap_yz				= cmdparser.get<bool>("swap-yz");
 		process.debug_render_to_tga	= cmdparser.get<bool>("debug-render-to-tga");
-		process.render_tex_size			= cmdparser.get<int> ("render-texture-size");
-		process.center_xy						= cmdparser.get<bool>("center-xy");
-		process.gamma								= cmdparser.get<float>("gamma");
+		process.render_tex_size		= cmdparser.get<int> ("render-texture-size");
+		process.center_xy			= cmdparser.get<bool>("center-xy");
+		process.gamma				= cmdparser.get<float>("gamma");
 		process.use_gamma_correction= cmdparser.get<bool>("gamma-correct");
-		process.glue 								= cmdparser.get<bool>("glue-to-ground");
-		process.file_name 					= input;
+		process.glue 				= cmdparser.get<bool>("glue-to-ground");
+		process.file_name 			= input;
 		process_file_path_and_name(process);
 
 		if (!process_load_obj(process)) {
@@ -83,15 +83,15 @@ int main(int ac, char** av) {
 		}
 		process_transform_points(process);
 		process_generate_triangle_list(process);
-		// process_backface_culling(process);
-		// triangle_occlusion_null(process);
+		process_optimize_mesh(process);
+		process_remove_degenerate_triangle(process);
+		// process_fix_winding(process);
+
+		process_backface_culling(process);
+		// process_triangle_occlusion_null(process);
 
 		process_triangle_occlusion(process);
-
-		process_split_triangle_by_material(process);
-
-		// optimize_mesh(process);
-		process_remove_degenerate_triangle(process);
+			
 		if (process.debug_render_to_tga) {
 			process_debug_render_mesh_to_tga(process);
 		}

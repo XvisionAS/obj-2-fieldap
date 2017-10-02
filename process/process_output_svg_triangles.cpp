@@ -1,24 +1,11 @@
 #include "process.h"
 
 struct edge_info_t {
+	int material;
 	int count;
 };
 
-struct edge_t {
-	edge_t(int _a, int _b, int _material) : a(_a), b(_b), material(_material) {}
-	int a, b, material;
-	bool operator<(const edge_t &that)  const {
-		if (a != that.a) {
-			return a < that.a;
-		} else if (b != that.b) {
-			return b < that.b;
-		} else if (material != that.material) {
-			return material < that.material;
-		}
-		return false;
-	}
-};
-
+typedef std::pair<int, int>						edge_t;
 typedef std::map<edge_t, edge_info_t> edge_infos_t;
 
 struct element_t {
@@ -38,8 +25,9 @@ static	 void build_edge_list(process_t& process, edge_infos_t& edges) {
 				if (a > b) {
 					std::swap(a, b);
 				}
-				auto& e = edges[edge_t(a, b, material)];
-				e.count++;				
+				auto& e = edges[edge_t(a, b)];
+				e.count++;
+				e.material = material;
 			};
 			addEdge(triangle.a, triangle.b, triangle.material);
 			addEdge(triangle.b, triangle.c, triangle.material);
@@ -60,41 +48,21 @@ static void remove_shared_edge(edge_infos_t& edges) {
 	}
 }
 
-static void build_element_list(process_t& process, edge_infos_t& edges, elements_t& elements) {
-	auto iter = edges.begin(), end = edges.end();
+
+static void build_element_list(process_t& process, elements_t& elements) {
+	auto iter = process.triangles.begin(), end = process.triangles.end();
 	while (iter != end) {
-		std::vector<int> stack;
-
-		int material = iter->first.material;
-		stack.push_back(iter->first.a);
-		stack.push_back(iter->first.b);
-		edges.erase(iter);
-
-		int found = 1;
-		while (found) {
-			int		to_find = stack.back();
-			
-			auto		it = std::find_if(edges.begin(), edges.end(), [=](auto& e) -> bool { return (to_find == e.first.a || to_find == e.first.b) && (e.first.material == material); });
-			found = it != edges.end();
-			if (found) {
-				stack.push_back(it->first.a == to_find ? it->first.b: it->first.a);
-				edges.erase(it);
-			}
-		}
-		stack.pop_back();
-
 		elements.push_back(element_t());
-		element_t& element = elements.back();
-		element.id = elements.size();
-		element.material = material;
-		element.z = -std::numeric_limits<float>::max();
-		for (auto eit : stack) {
-			const auto& a = process.vertices[eit];
-			element.indices.push_back(eit);
-			element.vertices.push_back(a);
-			element.z = std::min(element.z, a.z);
+		{
+			element_t& element = elements.back();
+			element.id = elements.size();
+			element.material = iter->material;
+			element.vertices.push_back(process.vertices[iter->a]);
+			element.vertices.push_back(process.vertices[iter->b]);
+			element.vertices.push_back(process.vertices[iter->c]);
+			element.z = std::max(element.vertices[0].z, std::max(element.vertices[1].z, element.vertices[2].z));
 		}
-		iter = edges.begin();
+		++iter;
 	}
 }
 
@@ -121,20 +89,32 @@ static void get_diffuse_from_tinyobj_material(process_t& process, int material, 
 	sprintf(buffer, "#%.2X%.2X%.2X", diffuse_as_int[0], diffuse_as_int[1], diffuse_as_int[2]);
 }
 
-void process_output_svg(process_t& process) {
+void process_output_svg_triangles(process_t& process) {
 	edge_infos_t		edges;
+	
 
 	build_edge_list(process, edges);
 	remove_shared_edge(edges);
-	
+
 	elements_t elements;
-	build_element_list(process, edges, elements);
+	build_element_list(process, elements);
 
 	std::ofstream svg;
 	svg.open(process.file_name_without_ext + ".svg");
-	svg << "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"" << process.min.x << " " << process.min.y << " " << (process.max.x - process.min.x) << " " << (process.max.y - process.min.y) << "\" >";
+	svg << "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"" << process.min.x << " " << process.min.y << " " << (process.max.x - process.min.x) << " " << (process.max.y - process.min.y) << "\"  style=\"shape-rendering:optimizeSpeed;\" >";
 
-	std::sort(elements.begin(), elements.end(), [](auto a, auto b) { return a.z < b.z; });
+	std::sort(elements.begin(), elements.end(), [](auto a, auto b) { 
+		if (a.z < b.z) {
+			return true;
+		} 
+		if (a.z > b.z) {
+			return false;
+		}
+		if (a.material < b.material) {
+			return true;
+		}
+		return false;		
+	});
 	int previous_material = -1;
 	int id = 0;
 	for (auto element : elements) {
@@ -147,7 +127,7 @@ void process_output_svg(process_t& process) {
 			previous_material = element.material;
 			char color[16];
 			get_diffuse_from_tinyobj_material(process, element.material, color);
-			svg << "<g id=\"" << id << "\" stroke=\"black\" fill=\"" << color << "\" stroke-width=\"0.1\">";
+			svg << "<g id=\"" << id << "\" fill=\"" << color << "\" >";
 			id++;
 		}
 		svg << "<polygon points=\"";
@@ -155,6 +135,14 @@ void process_output_svg(process_t& process) {
 			svg << a.x << "," << a.y << " ";
 		}
 		svg << "\"/>";
+	}
+	svg << "</g>";
+	svg << "<g stroke=\"#000\" stroke-width=\"0.1\">";
+	for (auto a : edges) {
+		const auto &v1 = process.vertices[a.first.first];
+		const auto &v2 = process.vertices[a.first.second];
+		
+		svg << "<line x1=\"" << v1.x << "\" y1=\"" << v1.y << "\" x2=\"" << v2.x << "\" y2=\"" << v2.y << "\"/>";
 	}
 	svg << "</g></svg>";
 }

@@ -12,7 +12,8 @@ void process_triangle_occlusion(process_t& process) {
 
 	for (int i = 0; i < len; ++i) {
 		auto& triangle = process.triangles[i];
-		rasterize(frame_buffer, process.points[triangle.a], process.points[triangle.b], process.points[triangle.c], i);
+		rasterize(frame_buffer, process.points[triangle.a], process.points[triangle.b], process.points[triangle.c], i);		
+		rasterize(frame_buffer, process.points[triangle.a], process.points[triangle.c], process.points[triangle.b], i);
 	}
 	for (auto& triangle : process.triangles) {
 		triangle.max_z = -std::numeric_limits<float>::max();

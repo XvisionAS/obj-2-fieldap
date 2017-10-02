@@ -77,3 +77,6 @@ void process_output_threejs(process_t& process);
 void process_output_socket(process_t& process);
 void process_swap_yz(process_t& process);
 void process_glue_to_ground(process_t& process);
+void process_fix_winding(process_t &process);
+void process_output_svg_triangles(process_t &process);
+void process_backface_culling(process_t& process);

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -21,32 +21,32 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B63166C2-2C26-4CB1-ABEC-83FAA742A5E3}</ProjectGuid>
     <RootNamespace>obj2fieldap</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -138,13 +138,16 @@
     <ClCompile Include="process\process_file_path_and_name.cpp" />
     <ClCompile Include="process\process_from_tinyobj_to_v3.cpp" />
     <ClCompile Include="process\process_generate_triangle_list.cpp" />
+    <ClCompile Include="process\process_glue_to_ground.cpp" />
     <ClCompile Include="process\process_load_obj.cpp" />
     <ClCompile Include="process\process_optimize_mesh.cpp" />
     <ClCompile Include="process\process_output_socket.cpp" />
     <ClCompile Include="process\process_output_svg.cpp" />
     <ClCompile Include="process\process_output_svg2.cpp" />
+    <ClCompile Include="process\process_output_svg_triangles.cpp" />
     <ClCompile Include="process\process_output_threejs.cpp" />
     <ClCompile Include="process\process_remove_degenerate_triangle.cpp" />
+    <ClCompile Include="process\process_fix_winding.cpp" />
     <ClCompile Include="process\process_split_triangle_by_material.cpp" />
     <ClCompile Include="process\process_swap_yz.cpp" />
     <ClCompile Include="process\process_transform_points.cpp" />

@@ -72,6 +72,14 @@ public:
 		return a.x * b.x + a.y * b.y;
 	}
 
+	static float dot(const v3& a, const v3& b) {
+		return a.x * b.x + a.y * b.y + a.z * b.z;
+	}
+
+	inline float sqrlen() const {
+		return x * x + y * y + z * z;
+	}
+
 	inline float dot2d(const v3& that) const {
 		return (x * that.x) + (y * that.y);
 	}

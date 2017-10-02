@@ -3,6 +3,10 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../externals/stb_image_write.h"
 
+//void print_point(point_t& p) {
+//	std::cout << " x = " << p.z << " y = " << p.y << " z = " << p.z << std::endl;
+//}
+
 void process_debug_render_mesh_to_tga(process_t& process) {
 	frame_buffer_t		frame_buffer(process.render_tex_size, process.render_tex_size);
 
@@ -10,7 +14,8 @@ void process_debug_render_mesh_to_tga(process_t& process) {
 		float		*color = process.tinyobj_materials[triangle.material].diffuse;
 		int			diffuse = (int)(color[0] * 255) | (int)(color[1] * 255) << 8 | (int)(color[2] * 255) << 16 | 0xff000000;
 		if (triangle.valid) {
-			rasterize(frame_buffer, process.points[triangle.a], process.points[triangle.b], process.points[triangle.c], diffuse);
+			rasterize(frame_buffer, process.points[triangle.a], process.points[triangle.b], process.points[triangle.c], diffuse);			
+			rasterize(frame_buffer, process.points[triangle.a], process.points[triangle.c], process.points[triangle.b], diffuse);
 		}
 	}
 
