@@ -44,6 +44,12 @@ void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 		false,
 		false);
 
+	cmdparser.add<bool>("sort-using-zmin",
+		'h',
+		"Sort object by their z min value ( z max by default )",
+		false,
+		false);
+
 	cmdparser.parse_check(ac, av);
 }
 
@@ -61,6 +67,7 @@ int main(int ac, char** av) {
 		process.center_xy			= cmdparser.get<bool>("center-xy");
 		process.gamma				= cmdparser.get<float>("gamma");
 		process.use_gamma_correction= cmdparser.get<bool>("gamma-correct");
+		process.sort_using_zmin	= cmdparser.get<bool>("sort-using-zmin");
 		process.glue 				= cmdparser.get<bool>("glue-to-ground");
 		process.file_name 			= input;
 		process_file_path_and_name(process);

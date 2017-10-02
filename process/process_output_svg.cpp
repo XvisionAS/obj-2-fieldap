@@ -92,7 +92,8 @@ static void build_element_list(process_t& process, edge_infos_t& edges, elements
 			const auto& a = process.vertices[eit];
 			element.indices.push_back(eit);
 			element.vertices.push_back(a);
-			element.z = std::min(element.z, a.z);
+
+			element.z = process.sort_using_zmin ? std::min(element.z, a.z) : std::max(element.z, a.z);
 		}
 		iter = edges.begin();
 	}

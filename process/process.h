@@ -46,6 +46,7 @@ struct process_t {
 	std::string											file_path;
 	bool														swap_yz;
 	bool														center_xy;
+	bool														sort_using_zmin;
 
 	v3															min;
 	v3															max;
