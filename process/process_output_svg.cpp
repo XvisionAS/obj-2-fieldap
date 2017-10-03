@@ -2,6 +2,7 @@
 
 struct edge_info_t {
 	int count;
+	float min_z, max_z;
 };
 
 struct edge_t {
@@ -24,8 +25,7 @@ typedef std::map<edge_t, edge_info_t> edge_infos_t;
 struct element_t {
 	int								material;
 	float							z;
-	size_t							id;
-	std::vector<int>		indices;
+	size_t						id;
 	std::vector<v3>		vertices;
 };
 
@@ -34,16 +34,18 @@ typedef std::vector<element_t> elements_t;
 static	 void build_edge_list(process_t& process, edge_infos_t& edges) {
 	for (auto triangle : process.triangles) {
 		if (triangle.valid) {
-			auto addEdge = [&](int a, int b, int material) {
+			auto addEdge = [&](int a, int b, const triangle_t& tri) {
 				if (a > b) {
 					std::swap(a, b);
 				}
-				auto& e = edges[edge_t(a, b, material)];
+				auto& e = edges[edge_t(a, b, tri.material)];
 				e.count++;				
+				e.max_z = tri.max_z;
+				e.min_z = tri.min_z;
 			};
-			addEdge(triangle.a, triangle.b, triangle.material);
-			addEdge(triangle.b, triangle.c, triangle.material);
-			addEdge(triangle.c, triangle.a, triangle.material);
+			addEdge(triangle.a, triangle.b, triangle);
+			addEdge(triangle.b, triangle.c, triangle);
+			addEdge(triangle.c, triangle.a, triangle);
 		}
 	}
 }
@@ -64,10 +66,15 @@ static void build_element_list(process_t& process, edge_infos_t& edges, elements
 	auto iter = edges.begin(), end = edges.end();
 	while (iter != end) {
 		std::vector<int> stack;
-
+		std::vector<std::pair<float, float> > zminzmax;		
 		int material = iter->first.material;
+		
 		stack.push_back(iter->first.a);
 		stack.push_back(iter->first.b);
+		
+		zminzmax.push_back(std::make_pair(iter->second.min_z, iter->second.max_z));
+		zminzmax.push_back(std::make_pair(iter->second.min_z, iter->second.max_z));
+
 		edges.erase(iter);
 
 		int found = 1;
@@ -78,6 +85,7 @@ static void build_element_list(process_t& process, edge_infos_t& edges, elements
 			found = it != edges.end();
 			if (found) {
 				stack.push_back(it->first.a == to_find ? it->first.b: it->first.a);
+				zminzmax.push_back(std::make_pair(it->second.min_z, it->second.max_z));
 				edges.erase(it);
 			}
 		}
@@ -87,13 +95,15 @@ static void build_element_list(process_t& process, edge_infos_t& edges, elements
 		element_t& element = elements.back();
 		element.id = elements.size();
 		element.material = material;
-		element.z = -std::numeric_limits<float>::max();
-		for (auto eit : stack) {
-			const auto& a = process.vertices[eit];
-			element.indices.push_back(eit);
+		element.z = process.sort_using_zmax ? -std::numeric_limits<float>::max() : std::numeric_limits<float>::max();
+		for (size_t i = 0; i < stack.size(); ++i) {
+			const int		index = stack[i];
+			const auto	&minmax = zminzmax[i];
+			const auto	&a = process.vertices[index];
+
 			element.vertices.push_back(a);
 
-			element.z = process.sort_using_zmin ? std::min(element.z, a.z) : std::max(element.z, a.z);
+			element.z = process.sort_using_zmax ? std::max(element.z, minmax.second) : std::min(element.z, minmax.first);
 		}
 		iter = edges.begin();
 	}
@@ -138,6 +148,7 @@ void process_output_svg(process_t& process) {
 	std::sort(elements.begin(), elements.end(), [](auto a, auto b) { return a.z < b.z; });
 	int previous_material = -1;
 	int id = 0;
+	svg << "<g stroke=\"" << process.outline_color << "\" stroke-width=\"" << process.outline_thickness << "\">";
 	for (auto element : elements) {
 		int need_change_material = previous_material != element.material;
 
@@ -147,8 +158,13 @@ void process_output_svg(process_t& process) {
 			}
 			previous_material = element.material;
 			char color[16];
-			get_diffuse_from_tinyobj_material(process, element.material, color);
-			svg << "<g id=\"" << id << "\" stroke=\"black\" fill=\"" << color << "\" stroke-width=\"0.1\">";
+			if (element.material != -1) {
+				get_diffuse_from_tinyobj_material(process, element.material, color);
+			}
+			else {
+				strcpy(color, "#aaa");
+			}
+			svg << "<g fill=\"" << color << "\">";
 			id++;
 		}
 		svg << "<polygon points=\"";
@@ -157,5 +173,5 @@ void process_output_svg(process_t& process) {
 		}
 		svg << "\"/>";
 	}
-	svg << "</g></svg>";
+	svg << "</g></g></svg>";
 }

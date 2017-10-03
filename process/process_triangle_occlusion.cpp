@@ -17,6 +17,7 @@ void process_triangle_occlusion(process_t& process) {
 	}
 	for (auto& triangle : process.triangles) {
 		triangle.max_z = -std::numeric_limits<float>::max();
+		triangle.min_z = std::numeric_limits<float>::max();
 		triangle.valid = 0;
 	}
 
@@ -26,6 +27,7 @@ void process_triangle_occlusion(process_t& process) {
 			auto& triangle = process.triangles[index];
 			triangle.valid = 1;
 			triangle.max_z = std::max(triangle.max_z, frame_buffer.depths[i]);
+			triangle.min_z = std::min(triangle.min_z, frame_buffer.depths[i]);
 		}
 	}
 }

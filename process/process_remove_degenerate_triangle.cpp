@@ -16,7 +16,7 @@ void process_remove_degenerate_triangle(process_t& process) {
 			triangles.push_back(triangle);
 		}
 	}
-	std::cout << "removed " << count << " degenerated triangle" << std::endl;
+	std::cout << "x removed " << count << " degenerated triangle(s)" << std::endl;
 	process.triangles.swap(triangles);
 }
 

@@ -22,7 +22,7 @@
 struct triangle_t {
 	int			a, b, c;
 	int			an, bn, cn;
-	float		max_z;
+	float		max_z, min_z;
 	int			material;
 	int			valid;
 };
@@ -46,7 +46,7 @@ struct process_t {
 	std::string											file_path;
 	bool														swap_yz;
 	bool														center_xy;
-	bool														sort_using_zmin;
+	bool														sort_using_zmax;
 
 	v3															min;
 	v3															max;
@@ -56,7 +56,12 @@ struct process_t {
 
 	bool														glue;
 
+	float														outline_thickness;
+	std::string											outline_color;
+
 	std::map<int, triangles_t>			triangles_per_materials;
+
+
 };
 
 void process_from_tinyobj_to_v3(process_t& process);

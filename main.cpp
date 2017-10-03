@@ -44,11 +44,23 @@ void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 		false,
 		false);
 
-	cmdparser.add<bool>("sort-using-zmin",
+	cmdparser.add<bool>("sort-using-zmax",
 		'h',
-		"Sort object by their z min value ( z max by default )",
+		"Sort object by their z max value ( z min by default )",
 		false,
 		false);
+
+	cmdparser.add<float>("outline-thickness",
+		'i',
+		"Thickness outline ( default 0.1 )",
+		false,
+		0.1f);
+
+	cmdparser.add<std::string>("outline-color",
+		'j',
+		"Color of the outline, in HTML hex format ( default #000 )",
+		false,
+		"#000");
 
 	cmdparser.parse_check(ac, av);
 }
@@ -61,15 +73,17 @@ int main(int ac, char** av) {
 	for (auto& input : cmdparser.rest()) {
 		process_t process;
 
-		process.swap_yz				= cmdparser.get<bool>("swap-yz");
+		process.swap_yz							= cmdparser.get<bool>("swap-yz");
 		process.debug_render_to_tga	= cmdparser.get<bool>("debug-render-to-tga");
-		process.render_tex_size		= cmdparser.get<int> ("render-texture-size");
-		process.center_xy			= cmdparser.get<bool>("center-xy");
-		process.gamma				= cmdparser.get<float>("gamma");
+		process.render_tex_size			= cmdparser.get<int> ("render-texture-size");
+		process.center_xy						= cmdparser.get<bool>("center-xy");
+		process.gamma								= cmdparser.get<float>("gamma");
 		process.use_gamma_correction= cmdparser.get<bool>("gamma-correct");
-		process.sort_using_zmin	= cmdparser.get<bool>("sort-using-zmin");
-		process.glue 				= cmdparser.get<bool>("glue-to-ground");
-		process.file_name 			= input;
+		process.sort_using_zmax			= cmdparser.get<bool>("sort-using-zmax");
+		process.glue 								= cmdparser.get<bool>("glue-to-ground");
+		process.file_name 					= input;
+		process.outline_color				= cmdparser.get<std::string>("outline-color");
+		process.outline_thickness		= cmdparser.get<float>("outline-thickness");
 		process_file_path_and_name(process);
 
 		if (!process_load_obj(process)) {
@@ -91,19 +105,17 @@ int main(int ac, char** av) {
 		process_transform_points(process);
 		process_generate_triangle_list(process);
 		process_optimize_mesh(process);
-		process_remove_degenerate_triangle(process);
-		// process_fix_winding(process);
+		process_remove_degenerate_triangle(process);		
 
-		process_backface_culling(process);
-		// process_triangle_occlusion_null(process);
+		process_backface_culling(process);		
 
 		process_triangle_occlusion(process);
 			
 		if (process.debug_render_to_tga) {
 			process_debug_render_mesh_to_tga(process);
 		}
-		process_output_svg(process);
-		// process_output_svg2(process);
+		
+		process_output_svg(process);		
 		process_output_threejs(process);
 		process_output_socket(process);
 	}
