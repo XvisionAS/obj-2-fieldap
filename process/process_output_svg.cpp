@@ -1,4 +1,5 @@
 #include "process.h"
+#include <string.h>
 
 struct edge_info_t {
 	int count;
