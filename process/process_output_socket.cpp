@@ -21,9 +21,13 @@ std::vector<std::string> split_string(const std::string& str, const std::string&
 
 void process_output_socket(process_t& process) {
 	json::JSON json;	
-	for (const auto& shape : process.tinyobj_shapes) {				
+	for (const auto& shape : process.tinyobj_shapes) {
+		if (!is_tag(shape.name)) {
+			continue;
+		}
 		auto split = split_string(shape.name, "_");
-		if (split.empty() || split[0].compare("tag") != 0) {
+		
+		if (split.empty()) {
 			continue;
 		}
 

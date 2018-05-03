@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="externals\tiny_obj_loader.cc" />
+    <ClCompile Include="is_tag.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="process\process_backface_culling.cpp" />
     <ClCompile Include="process\process_center_xy.cpp" />

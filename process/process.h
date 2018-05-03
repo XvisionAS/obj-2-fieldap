@@ -19,6 +19,8 @@
 #include "../libs/rasterizer.h"
 
 
+
+
 struct triangle_t {
 	int			a, b, c;
 	int			an, bn, cn;
@@ -86,3 +88,5 @@ void process_glue_to_ground(process_t& process);
 void process_fix_winding(process_t &process);
 void process_output_svg_triangles(process_t &process);
 void process_backface_culling(process_t& process);
+
+bool is_tag(const std::string& string);

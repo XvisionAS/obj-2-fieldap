@@ -1,4 +1,6 @@
 #include "process.h"
+#include <cctype>
+
 
 
 void process_compute_min_max(process_t& process) {
@@ -7,8 +9,7 @@ void process_compute_min_max(process_t& process) {
 
 
 	for (const auto& shape : process.tinyobj_shapes) {
-		size_t pos = shape.name.find("tag_");
-		if (pos == 0) {
+		if (is_tag(shape.name)) {
 			continue;
 		}
 		size_t		faces_count = shape.mesh.num_face_vertices.size();

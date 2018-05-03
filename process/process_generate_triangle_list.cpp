@@ -4,7 +4,7 @@ void process_generate_triangle_list(process_t& process) {
 	size_t triangle_count = 0;
 
 	for (const auto& shape : process.tinyobj_shapes) {
-		if (shape.name.find("tag_") != 0) {
+		if (!is_tag(shape.name) != 0) {
 			triangle_count += shape.mesh.num_face_vertices.size();
 		}
 	}
@@ -12,7 +12,7 @@ void process_generate_triangle_list(process_t& process) {
 	process.triangles.resize(triangle_count);
 	size_t triangle_index = 0;
 	for (const auto& shape : process.tinyobj_shapes) {
-		if (shape.name.find("tag_") == 0) {
+		if (is_tag(shape.name)) {
 			continue;
 		}
 

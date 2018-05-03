@@ -44,7 +44,7 @@ void process_output_threejs(process_t& process) {
 	std::map<int, int>		remapper;
 
 	for (const auto& shape : process.tinyobj_shapes) {
-		if (shape.name.find("tag_") == 0) {
+		if (!is_tag(shape.name)) {
 			continue;
 		}
 		size_t offset = 0;
