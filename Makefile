@@ -20,6 +20,7 @@ SRCS=main.cpp \
 	process/process_transform_points.cpp \
 	process/process_triangle_occlusion.cpp \
 	process/process_glue_to_ground.cpp \
+	is_tag.cpp \
 	externals/tiny_obj_loader.cc
 
 CPP_OBJS=$(SRCS:%.cpp=$(BUILD_DIR)/%.o)
