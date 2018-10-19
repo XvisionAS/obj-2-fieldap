@@ -62,6 +62,12 @@ void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 		false,
 		"#000");
 
+	cmdparser.add<float>("svg-scale",
+		'k',
+		"Apply scales to SVG",
+		false,
+		1.0f);
+
 	cmdparser.parse_check(ac, av);
 }
 
@@ -84,6 +90,8 @@ int main(int ac, char** av) {
 		process.file_name 					= input;
 		process.outline_color				= cmdparser.get<std::string>("outline-color");
 		process.outline_thickness		= cmdparser.get<float>("outline-thickness");
+		process.svg_scale						= cmdparser.get<float>("svg-scale");
+
 		process_file_path_and_name(process);
 
 		if (!process_load_obj(process)) {
@@ -105,17 +113,17 @@ int main(int ac, char** av) {
 		process_transform_points(process);
 		process_generate_triangle_list(process);
 		process_optimize_mesh(process);
-		process_remove_degenerate_triangle(process);		
+		process_remove_degenerate_triangle(process);
 
-		process_backface_culling(process);		
+		process_backface_culling(process);
 
 		process_triangle_occlusion(process);
-			
+
 		if (process.debug_render_to_tga) {
 			process_debug_render_mesh_to_tga(process);
 		}
-		
-		process_output_svg(process);		
+
+		process_output_svg(process);
 		process_output_threejs(process);
 		process_output_socket(process);
 	}

@@ -40,7 +40,7 @@ static	 void build_edge_list(process_t& process, edge_infos_t& edges) {
 					std::swap(a, b);
 				}
 				auto& e = edges[edge_t(a, b, tri.material)];
-				e.count++;				
+				e.count++;
 				e.max_z = tri.max_z;
 				e.min_z = tri.min_z;
 			};
@@ -67,12 +67,12 @@ static void build_element_list(process_t& process, edge_infos_t& edges, elements
 	auto iter = edges.begin(), end = edges.end();
 	while (iter != end) {
 		std::vector<int> stack;
-		std::vector<std::pair<float, float> > zminzmax;		
+		std::vector<std::pair<float, float> > zminzmax;
 		int material = iter->first.material;
-		
+
 		stack.push_back(iter->first.a);
 		stack.push_back(iter->first.b);
-		
+
 		zminzmax.push_back(std::make_pair(iter->second.min_z, iter->second.max_z));
 		zminzmax.push_back(std::make_pair(iter->second.min_z, iter->second.max_z));
 
@@ -81,7 +81,7 @@ static void build_element_list(process_t& process, edge_infos_t& edges, elements
 		int found = 1;
 		while (found) {
 			int		to_find = stack.back();
-			
+
 			auto		it = std::find_if(edges.begin(), edges.end(), [=](auto& e) -> bool { return (to_find == e.first.a || to_find == e.first.b) && (e.first.material == material); });
 			found = it != edges.end();
 			if (found) {
@@ -138,13 +138,13 @@ void process_output_svg(process_t& process) {
 
 	build_edge_list(process, edges);
 	remove_shared_edge(edges);
-	
+
 	elements_t elements;
 	build_element_list(process, edges, elements);
 
 	std::ofstream svg;
 	svg.open(process.file_name_without_ext + ".svg");
-	svg << "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"" << process.min.x << " " << process.min.y << " " << (process.max.x - process.min.x) << " " << (process.max.y - process.min.y) << "\" >";
+	svg << "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"" << process.min.x * process.svg_scale << " " << process.min.y * process.svg_scale << " " << (process.max.x - process.min.x) * process.svg_scale << " " << (process.max.y - process.min.y) * process.svg_scale << "\" >";
 
 	std::sort(elements.begin(), elements.end(), [](auto a, auto b) { return a.z < b.z; });
 	int previous_material = -1;
@@ -170,7 +170,7 @@ void process_output_svg(process_t& process) {
 		}
 		svg << "<polygon points=\"";
 		for (auto a : element.vertices) {
-			svg << a.x << "," << a.y << " ";
+			svg << a.x * process.svg_scale << "," << a.y * process.svg_scale << " ";
 		}
 		svg << "\"/>";
 	}

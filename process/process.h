@@ -63,7 +63,7 @@ struct process_t {
 
 	std::map<int, triangles_t>			triangles_per_materials;
 
-
+	float														svg_scale;
 };
 
 void process_from_tinyobj_to_v3(process_t& process);
