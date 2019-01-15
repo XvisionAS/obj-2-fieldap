@@ -159,12 +159,12 @@ void process_output_svg(process_t& process) {
 			}
 			previous_material = element.material;
 			char color[16];
-			if (element.material != -1) {
+			/*if (element.material != -1) {
 				get_diffuse_from_tinyobj_material(process, element.material, color);
 			}
-			else {
-				strcpy(color, "#aaa");
-			}
+			else {*/
+			strcpy(color, "#aaa");
+			//}
 			svg << "<g fill=\"" << color << "\">";
 			id++;
 		}

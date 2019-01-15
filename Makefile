@@ -26,15 +26,14 @@ SRCS=main.cpp \
 CPP_OBJS=$(SRCS:%.cpp=$(BUILD_DIR)/%.o)
 OBJS=$(CPP_OBJS:%.cc=$(BUILD_DIR)/%.o)
 DEPS=$(OBJS:%.o=%.d)
-CPPFLAGS=-I. -g -O3 -Wall -Werror -Wextra
+LIBS=-lassimp -lIrrXML -lz
+CPPFLAGS=-I. -g -O3 -Wall -Wextra -I$(VCPKGROOT)/include -L$(VCPKGROOT)/lib
 RM=rm -f
-
+#-Werror
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	$(CXX)  $(CPPFLAGS) $(INCLUDES) -o $(TARGET) $(OBJS) $(LFLAGS) $(LIBS)
-
--include $(DEPS)
 
 $(BUILD_DIR)/%.o : %.cpp
 	mkdir -p $(@D)
@@ -49,3 +48,4 @@ $(BUILD_DIR)/%.o : %.cc
 clean:
 	$(RM) $(OBJS) $(DEPS) $(TARGET) vgcore*
 
+-include $(DEPS)

@@ -2,7 +2,7 @@
 
 void process_remove_degenerate_triangle(process_t& process) {	
 	triangles_t triangles;
-	size_t			count = 0;
+	size_t count = 0;
 	triangles.reserve(process.triangles.size());	
 	for (auto& triangle : process.triangles) {
 		if (

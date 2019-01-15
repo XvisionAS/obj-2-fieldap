@@ -14,6 +14,9 @@
 
 #include <vector>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+
 #include "../externals/tiny_obj_loader.h"
 #include "../libs/v3.h"
 #include "../libs/rasterizer.h"
@@ -25,8 +28,9 @@ struct triangle_t {
 	int			a, b, c;
 	int			an, bn, cn;
 	float		max_z, min_z;
-	int			material;
+	int			material; //Change to aiCOlor
 	int			valid;
+  aiMesh* mesh;
 };
 
 typedef std::vector<triangle_t>	triangles_t;
@@ -36,6 +40,9 @@ struct process_t {
 	std::vector<tinyobj::shape_t>			tinyobj_shapes;
 	tinyobj::attrib_t									tinyobj_attrib;
 	std::string												tinyobj_err;
+
+	Assimp::Importer                  importer;
+  const aiScene                     *scene;
 
 	int															render_tex_size;
 	bool														debug_render_to_tga;

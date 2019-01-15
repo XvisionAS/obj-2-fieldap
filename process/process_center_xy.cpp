@@ -8,9 +8,40 @@ void process_center_xy(process_t& process) {
 	for (float* vertex = vertices_start; vertex != vertices_end; vertex += 3) {
 		center.add(vertex);
 	}
+
 	center.mul(1.0f / (float)(process.tinyobj_attrib.vertices.size() / 3));
+
 	for (float* vertex = vertices_start; vertex != vertices_end; vertex += 3) {
 		*(vertex + 0) -= center.x;
 		*(vertex + 1) -= center.y;
 	}
+
+	center = v3(0.0f);
+	uint total_verts = 0;
+	for (uint i = 0; i < process.scene->mNumMeshes; i++)
+	{
+		auto mesh = process.scene->mMeshes[i];
+		total_verts += mesh->mNumVertices;
+		for (uint m = 0; m < mesh->mNumVertices; m++)
+		{
+			auto &v = mesh->mVertices[m];
+			center.add(v3(v.x, v.y, v.z));
+		}
+		printf("%d\n", total_verts);
+	}
+
+	center.mul(1.0f / (float)(total_verts));
+
+	for (uint i = 0; i < process.scene->mNumMeshes; i++)
+	{
+		auto mesh = process.scene->mMeshes[i];
+		for (uint m = 0; m < mesh->mNumVertices; m++)
+		{
+			auto &v = mesh->mVertices[m];
+			v.x-=center.x;
+			v.y-=center.y;
+		}
+	}
+
+
 }
