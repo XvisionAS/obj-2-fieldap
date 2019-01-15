@@ -36,7 +36,7 @@ void process_transform_points(process_t& process) {
 		p.z = (float) xyz.z;
 	}
 
-	// for (point_t p : process.points){
-	// 	printf("px=%d, py=%d, pz=%f\n", p.x, p.y, p.z);
-	// }
+	 for (point_t p : process.points){
+	 	printf("px=%d, py=%d, pz=%f\n", p.x, p.y, p.z);
+	 }
 }

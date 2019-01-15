@@ -51,7 +51,7 @@ void process_generate_triangle_list(process_t& process) {
 				t1.valid = 1;
 				t1.mesh = mesh;
 
-				printf("face%d, a_ind:%d, b_ind:%d, c_ind:%d, z_max:%f\n", (int)face_it, t1.a, t1.b, t1.c, t1.max_z);
+				//printf("face%d, a_ind:%d, b_ind:%d, c_ind:%d, z_max:%f\n", (int)face_it, t1.a, t1.b, t1.c, t1.max_z);
 			}
 
 		}

@@ -128,6 +128,8 @@ int main(int ac, char** av) {
 			continue;
 		}
 
+		process_load_obj(process);
+
 		if (process.swap_yz) {
 			process_swap_yz(process);
 		}
@@ -137,7 +139,8 @@ int main(int ac, char** av) {
 		}
 
 		process_from_tinyobj_to_v3(process);
-		process_compute_min_max(process);
+
+		process_compute_min_max(process); // NOT DONE
 		
 		if (process.glue) {
 			process_glue_to_ground(process);

@@ -13,7 +13,15 @@ void process_from_tinyobj_to_v3(process_t& process) {
 
 	//--
 	
-	process.vertices.reserve(process.scene->mNumMeshes);
+	//Get total verts
+	int total_verts = 0;
+	for (uint i = 0; i < process.scene->mNumMeshes; i++)
+	{
+		auto mesh = process.scene->mMeshes[i];
+		total_verts += mesh->mNumVertices;
+	}
+
+	process.vertices.reserve(total_verts);
 
 	for (uint i = 0; i < process.scene->mNumMeshes; i++)
 	{
