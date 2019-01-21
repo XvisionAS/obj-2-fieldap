@@ -75,7 +75,6 @@ struct process_t {
 
 void process_from_tinyobj_to_v3(process_t& process);
 void process_optimize_mesh(process_t& process);
-void process_triangle_occlusion_null(process_t& process);
 void process_triangle_occlusion(process_t& process);
 void process_remove_degenerate_triangle(process_t& process);
 void process_debug_render_mesh_to_tga(process_t& process);

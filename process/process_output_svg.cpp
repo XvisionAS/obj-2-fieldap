@@ -111,9 +111,10 @@ static void build_element_list(process_t& process, edge_infos_t& edges, elements
 }
 
 static void get_diffuse_from_tinyobj_material(process_t& process, int material, char* buffer) {
-	float *diffuse = process.tinyobj_materials[material].diffuse;
+	aiColor3D diffuse(0.f,0.f,0.f);
+	process.scene->mMaterials[material]->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
 	float actual_diffuse[] = {
-		diffuse[0], diffuse[1], diffuse[2]
+		diffuse.r, diffuse.g, diffuse.b
 	};
 
 	if (process.use_gamma_correction) {
@@ -131,10 +132,12 @@ static void get_diffuse_from_tinyobj_material(process_t& process, int material, 
 		(int)(actual_diffuse[2] * 255),
 	};
 	sprintf(buffer, "#%.2X%.2X%.2X", diffuse_as_int[0], diffuse_as_int[1], diffuse_as_int[2]);
+
 }
 
+
 void process_output_svg(process_t& process) {
-	edge_infos_t		edges;
+	edge_infos_t edges;
 
 	build_edge_list(process, edges);
 	remove_shared_edge(edges);
@@ -159,12 +162,12 @@ void process_output_svg(process_t& process) {
 			}
 			previous_material = element.material;
 			char color[16];
-			/*if (element.material != -1) {
+			if (element.material != -1) {
 				get_diffuse_from_tinyobj_material(process, element.material, color);
 			}
-			else {*/
-			strcpy(color, "#aaa");
-			//}
+			else {
+				strcpy(color, "#aaa");
+			}
 			svg << "<g fill=\"" << color << "\">";
 			id++;
 		}

@@ -79,29 +79,6 @@ void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 
 
 int main(int ac, char** av) {
-	 Assimp::Importer importer;
-	 const aiScene *scene = importer.ReadFile("cube.obj", aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_PreTransformVertices);
-
-	 printf("number of meshes %d\n", scene->mNumMeshes);
-	 for (uint i = 0; i < scene->mNumMeshes; i++)
-	 {
-	 	auto mesh = scene->mMeshes[i];
-	 	printf("mesh: %s\n", mesh->mName.C_Str());
-	 	printf("vertices:\n");
-	 	for (uint i = 0; i < mesh->mNumVertices; i++)
-	 	{
-	 		auto &v = mesh->mVertices[i];
-	 		printf(" | %f, %f, %f\n", v.x, v.y, v.z);
-	 	}
-	 	printf("faces:\n");
-	 	for (uint i = 0; i < mesh->mNumFaces; i++)
-	 	{
-	 		auto &f = mesh->mFaces[i];
-	 		assert(f.mNumIndices == 3);
-	 		//printf("  %d, %d, %d\n", f.mIndices[0], f.mIndices[1], f.mIndices[2]);
-	 	}
-	 }
-
 	cmdline::parser cmdparser;
 
 	parse_command_line(ac, av, cmdparser);
@@ -128,8 +105,6 @@ int main(int ac, char** av) {
 			continue;
 		}
 
-		process_load_obj(process);
-
 		if (process.swap_yz) {
 			process_swap_yz(process);
 		}
@@ -140,7 +115,7 @@ int main(int ac, char** av) {
 
 		process_from_tinyobj_to_v3(process);
 
-		process_compute_min_max(process); // NOT DONE
+		process_compute_min_max(process);
 		
 		if (process.glue) {
 			process_glue_to_ground(process);
@@ -149,27 +124,14 @@ int main(int ac, char** av) {
 		process_transform_points(process);
 		process_generate_triangle_list(process);
 
-		process_optimize_mesh(process);
-
-		process_remove_degenerate_triangle(process);
-
 		process_backface_culling(process);
 		process_triangle_occlusion(process);
 
+		if (process.debug_render_to_tga) {
+			process_debug_render_mesh_to_tga(process);
+		}
+
 		process_output_svg(process);
 
-		/*
-
-
-			process_triangle_occlusion(process);
-
-			if (process.debug_render_to_tga) {
-				process_debug_render_mesh_to_tga(process);
-			}
-
-			process_output_svg(process);
-			process_output_threejs(process);
-			process_output_socket(process);
-		*/
 	}
 }
