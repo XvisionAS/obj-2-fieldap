@@ -56,9 +56,7 @@ void process_generate_triangle_list(process_t& process)
 				triangle.material = material;
 				triangle.valid = 1;
 				triangle.mesh = mesh;
-
 			}
-
 		}
 
 		total_vertex_count += mesh->mNumVertices;

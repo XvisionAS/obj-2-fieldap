@@ -2,7 +2,8 @@
 #include "../externals/json.hpp"
 
 
-std::vector<std::string> split_string(const std::string& str, const std::string& delimiters) {
+std::vector<std::string> split_string(const std::string& str, const std::string& delimiters)
+{
 	std::vector<std::string> split;
 	size_t p = 0, c;
 	do {
@@ -18,15 +19,21 @@ std::vector<std::string> split_string(const std::string& str, const std::string&
 	return split;
 }
 
+void process_output_socket(process_t& process)
+{
+	json::JSON json;
 
-void process_output_socket(process_t& process) {
-	json::JSON json;	
-	for (const auto& shape : process.tinyobj_shapes) {
-		if (!is_tag(shape.name)) {
+	for (uint i = 0; i < process.scene->mNumMeshes; i++)
+	{
+		auto mesh = process.scene->mMeshes[i];
+
+		if (!is_tag(mesh->mName.C_Str()))
+		{
 			continue;
 		}
-		auto split = split_string(shape.name, "_");
-		
+
+		auto split = split_string(mesh->mName.C_Str(), "_");
+
 		if (split.empty()) {
 			continue;
 		}
@@ -34,33 +41,31 @@ void process_output_socket(process_t& process) {
 		std::string name = split[1];
 		json::JSON	tag;
 
-		
 		tag["name"] = name;
 		if (split.size() > 2) {
 			tag["types"] = json::Array(
 				std::atoi(split[2].c_str())
 			);
-		}		
-		// compute center
-		size_t		faces_count = shape.mesh.num_face_vertices.size();		
-		v3			center(0.0f);
-		int			offset = 0;
-		for (size_t face = 0; face < faces_count; ++face) {
-			int num_face_vertices = shape.mesh.num_face_vertices[face];
-
-			for (int i = 0; i < num_face_vertices; ++i) {
-				int a = shape.mesh.indices[offset++].vertex_index;				
-				center.add(process.vertices[a]);
-			}	
 		}
-		center.mul(1.0f / (float)offset);
+
+		//Finding center
+		v3 center = v3(0.0f);
+		for (uint m = 0; m < mesh->mNumVertices; m++)
+		{
+			auto &v = mesh->mVertices[m];
+			center.add(v3(v.x, v.y, v.z));
+		}
+		center.mul(1.0f / (float)(mesh->mNumVertices));
+
 
 		tag["x"] = center.x;
-		if (process.swap_yz) {
+		if (process.swap_yz)
+		{
 			tag["y"] = center.y;
 			tag["z"] = center.z;
 		}
-		else {
+		else 
+		{
 			tag["y"] = center.z;
 			tag["z"] = center.y;
 		}

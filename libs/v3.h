@@ -83,4 +83,10 @@ public:
 	inline float dot2d(const v3& that) const {
 		return (x * that.x) + (y * that.y);
 	}
+
+	inline bool equals(const v3& that) const {
+		return (x == that.x) && (y == that.y) && (z == that.z);
+	}
+
+
 };

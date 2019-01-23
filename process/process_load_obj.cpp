@@ -8,9 +8,7 @@ bool process_load_obj(process_t& process)
 	process.scene = process.importer.ReadFile(process.file_name.c_str(), 
 	  aiProcess_Triangulate 
 	| aiProcess_GenNormals 
-	| aiProcess_PreTransformVertices 
 	| aiProcess_JoinIdenticalVertices
-	| aiProcess_OptimizeMeshes 
 	| aiProcess_FindDegenerates
 	| aiProcess_FindInvalidData
 	| aiProcess_SortByPType);

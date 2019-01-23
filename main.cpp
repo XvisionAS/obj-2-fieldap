@@ -98,6 +98,16 @@ int main(int ac, char** av) {
 		process.outline_thickness    = cmdparser.get<float>("outline-thickness");
 		process.svg_scale            = cmdparser.get<float>("svg-scale");
 
+		/*
+			A note on future optimization:
+			Right now, the process_optimize_mesh() function is the biggest performance hog. 
+			This is because the importer splits the faces up to all have unique verticies, so that every face has good normals. 
+			An optimization idea for the future would be to set the aiProcess_DropNormals in the importer, and to generate the 
+			normals manually for each face as we do the backface culling.
+			
+			-Simen 23/1/2018
+		*/
+
 		process_file_path_and_name(process);
 
 		if (!process_load_obj(process)) 
@@ -124,6 +134,8 @@ int main(int ac, char** av) {
 		process_transform_points(process);
 		process_generate_triangle_list(process);
 
+		process_optimize_mesh(process);
+
 		process_backface_culling(process);
 		process_triangle_occlusion(process);
 
@@ -132,6 +144,7 @@ int main(int ac, char** av) {
 		}
 
 		process_output_svg(process);
+		process_output_socket(process);
 
 	}
 }

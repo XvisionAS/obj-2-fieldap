@@ -20,6 +20,8 @@ void process_backface_culling(process_t& process)
 
 			valid = v3::dot(normal, camera) < 0;
 		}
+
+
 		if (valid) 
 		{
 			triangles.push_back(triangle);
