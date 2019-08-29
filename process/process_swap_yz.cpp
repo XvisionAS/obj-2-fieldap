@@ -17,7 +17,9 @@ void process_swap_yz(process_t& process) {
 		for (uint32 i = 0; i < mesh->mNumVertices; i++)
 		{
 			auto &v = mesh->mVertices[i];
-			std::swap(v.y, v.z);
+			auto temp = v.y;
+			v.y = v.z;
+			v.z = temp;
 		}
 	}
 }
