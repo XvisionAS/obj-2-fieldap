@@ -26,7 +26,7 @@ SRCS=main.cpp \
 CPP_OBJS=$(SRCS:%.cpp=$(BUILD_DIR)/%.o)
 OBJS=$(CPP_OBJS:%.cc=$(BUILD_DIR)/%.o)
 DEPS=$(OBJS:%.o=%.d)
-CPPFLAGS=-I. -g -O3 -Wall -Werror -Wextra
+CPPFLAGS=-I. -g -O3 -Wall
 RM=rm -f
 
 all: $(TARGET)

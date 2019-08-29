@@ -38,7 +38,7 @@ namespace {
                 case '\t': output += "\\t";  break;
                 default  : output += str[i]; break;
             }
-        return std::move( output );
+        return output;
     }
 }
 
@@ -98,8 +98,8 @@ class JSON
 
         JSON() : Internal(), Type( Class::Null ){}
 
-        JSON( initializer_list<JSON> list ) 
-            : JSON() 
+        JSON( initializer_list<JSON> list )
+            : JSON()
         {
             SetType( Class::Object );
             for( auto i = list.begin(), e = list.end(); i != e; ++i, ++i )
@@ -123,17 +123,17 @@ class JSON
         JSON( const JSON &other ) {
             switch( other.Type ) {
             case Class::Object:
-                Internal.Map = 
+                Internal.Map =
                     new map<string,JSON>( other.Internal.Map->begin(),
                                           other.Internal.Map->end() );
                 break;
             case Class::Array:
-                Internal.List = 
+                Internal.List =
                     new deque<JSON>( other.Internal.List->begin(),
                                       other.Internal.List->end() );
                 break;
             case Class::String:
-                Internal.String = 
+                Internal.String =
                     new string( *other.Internal.String );
                 break;
             default:
@@ -146,17 +146,17 @@ class JSON
             ClearInternal();
             switch( other.Type ) {
             case Class::Object:
-                Internal.Map = 
+                Internal.Map =
                     new map<string,JSON>( other.Internal.Map->begin(),
                                           other.Internal.Map->end() );
                 break;
             case Class::Array:
-                Internal.List = 
+                Internal.List =
                     new deque<JSON>( other.Internal.List->begin(),
                                       other.Internal.List->end() );
                 break;
             case Class::String:
-                Internal.String = 
+                Internal.String =
                     new string( *other.Internal.String );
                 break;
             default:
@@ -285,10 +285,10 @@ class JSON
         /// Functions for getting primitives from the JSON object.
         bool IsNull() const { return Type == Class::Null; }
 
-        string ToString() const { bool b; return std::move( ToString( b ) ); }
+        string ToString() const { bool b; return ToString( b ) ; }
         string ToString( bool &ok ) const {
             ok = (Type == Class::String);
-            return ok ? std::move( json_escape( *Internal.String ) ): string("");
+            return ok ? json_escape( *Internal.String ) : string("");
         }
 
         double ToFloat() const { bool b; return ToFloat( b ); }
@@ -328,7 +328,7 @@ class JSON
         }
 
 
-        JSONConstWrapper<deque<JSON>> ArrayRange() const { 
+        JSONConstWrapper<deque<JSON>> ArrayRange() const {
             if( Type == Class::Array )
                 return JSONConstWrapper<deque<JSON>>( Internal.List );
             return JSONConstWrapper<deque<JSON>>( nullptr );
@@ -382,7 +382,7 @@ class JSON
                 return;
 
             ClearInternal();
-          
+
             switch( type ) {
             case Class::Null:      Internal.Map    = nullptr;                break;
             case Class::Object:    Internal.Map    = new map<string,JSON>(); break;
@@ -397,9 +397,9 @@ class JSON
         }
 
     private:
-      /* beware: only call if YOU know that Internal is allocated. No checks performed here. 
-         This function should be called in a constructed JSON just before you are going to 
-        overwrite Internal... 
+      /* beware: only call if YOU know that Internal is allocated. No checks performed here.
+         This function should be called in a constructed JSON just before you are going to
+        overwrite Internal...
       */
       void ClearInternal() {
         switch( Type ) {
@@ -416,18 +416,18 @@ class JSON
 };
 
 inline JSON Array() {
-    return std::move( JSON::Make( JSON::Class::Array ) );
+    return JSON::Make( JSON::Class::Array );
 }
 
 template <typename... T>
 JSON Array( T... args ) {
     JSON arr = JSON::Make( JSON::Class::Array );
     arr.append( args... );
-    return std::move( arr );
+    return arr;
 }
 
 inline JSON Object() {
-    return std::move( JSON::Make( JSON::Class::Object ) );
+    return JSON::Make( JSON::Class::Object );
 }
 
 inline std::ostream& operator<<( std::ostream &os, const JSON &json ) {
@@ -448,7 +448,7 @@ namespace {
         ++offset;
         consume_ws( str, offset );
         if( str[offset] == '}' ) {
-            ++offset; return std::move( Object );
+            ++offset; return Object;
         }
 
         while( true ) {
@@ -461,7 +461,7 @@ namespace {
             consume_ws( str, ++offset );
             JSON Value = parse_next( str, offset );
             Object[Key.ToString()] = Value;
-            
+
             consume_ws( str, offset );
             if( str[offset] == ',' ) {
                 ++offset; continue;
@@ -475,17 +475,17 @@ namespace {
             }
         }
 
-        return std::move( Object );
+        return Object;
     }
 
     JSON parse_array( const string &str, size_t &offset ) {
         JSON Array = JSON::Make( JSON::Class::Array );
         unsigned index = 0;
-        
+
         ++offset;
         consume_ws( str, offset );
         if( str[offset] == ']' ) {
-            ++offset; return std::move( Array );
+            ++offset; return Array;
         }
 
         while( true ) {
@@ -500,11 +500,11 @@ namespace {
             }
             else {
                 std::cerr << "ERROR: Array: Expected ',' or ']', found '" << str[offset] << "'\n";
-                return std::move( JSON::Make( JSON::Class::Array ) );
+                return JSON::Make( JSON::Class::Array );
             }
         }
 
-        return std::move( Array );
+        return Array;
     }
 
     JSON parse_string( const string &str, size_t &offset ) {
@@ -529,7 +529,7 @@ namespace {
                             val += c;
                         else {
                             std::cerr << "ERROR: String: Expected hex character in unicode escape, found '" << c << "'\n";
-                            return std::move( JSON::Make( JSON::Class::String ) );
+                            return JSON::Make( JSON::Class::String );
                         }
                     }
                     offset += 4;
@@ -542,7 +542,7 @@ namespace {
         }
         ++offset;
         String = val;
-        return std::move( String );
+        return String;
     }
 
     JSON parse_number( const string &str, size_t &offset ) {
@@ -556,7 +556,7 @@ namespace {
             if( (c == '-') || (c >= '0' && c <= '9') )
                 val += c;
             else if( c == '.' ) {
-                val += c; 
+                val += c;
                 isDouble = true;
             }
             else
@@ -571,7 +571,7 @@ namespace {
                     exp_str += c;
                 else if( !isspace( c ) && c != ',' && c != ']' && c != '}' ) {
                     std::cerr << "ERROR: Number: Expected a number for exponent, found '" << c << "'\n";
-                    return std::move( JSON::Make( JSON::Class::Null ) );
+                    return JSON::Make( JSON::Class::Null );
                 }
                 else
                     break;
@@ -580,10 +580,10 @@ namespace {
         }
         else if( !isspace( c ) && c != ',' && c != ']' && c != '}' ) {
             std::cerr << "ERROR: Number: unexpected character '" << c << "'\n";
-            return std::move( JSON::Make( JSON::Class::Null ) );
+            return JSON::Make( JSON::Class::Null );
         }
         --offset;
-        
+
         if( isDouble )
             Number = std::stod( val ) * std::pow( 10, exp );
         else {
@@ -592,7 +592,7 @@ namespace {
             else
                 Number = std::stol( val );
         }
-        return std::move( Number );
+        return Number;
     }
 
     JSON parse_bool( const string &str, size_t &offset ) {
@@ -603,20 +603,20 @@ namespace {
             Bool = false;
         else {
             std::cerr << "ERROR: Bool: Expected 'true' or 'false', found '" << str.substr( offset, 5 ) << "'\n";
-            return std::move( JSON::Make( JSON::Class::Null ) );
+            return JSON::Make( JSON::Class::Null );
         }
         offset += (Bool.ToBool() ? 4 : 5);
-        return std::move( Bool );
+        return Bool;
     }
 
     JSON parse_null( const string &str, size_t &offset ) {
         JSON Null;
         if( str.substr( offset, 4 ) != "null" ) {
             std::cerr << "ERROR: Null: Expected 'null', found '" << str.substr( offset, 4 ) << "'\n";
-            return std::move( JSON::Make( JSON::Class::Null ) );
+            return JSON::Make( JSON::Class::Null );
         }
         offset += 4;
-        return std::move( Null );
+        return Null;
     }
 
     JSON parse_next( const string &str, size_t &offset ) {
@@ -624,14 +624,14 @@ namespace {
         consume_ws( str, offset );
         value = str[offset];
         switch( value ) {
-            case '[' : return std::move( parse_array( str, offset ) );
-            case '{' : return std::move( parse_object( str, offset ) );
-            case '\"': return std::move( parse_string( str, offset ) );
+            case '[' : return parse_array( str, offset );
+            case '{' : return parse_object( str, offset );
+            case '\"': return parse_string( str, offset );
             case 't' :
-            case 'f' : return std::move( parse_bool( str, offset ) );
-            case 'n' : return std::move( parse_null( str, offset ) );
+            case 'f' : return parse_bool( str, offset );
+            case 'n' : return parse_null( str, offset );
             default  : if( ( value <= '9' && value >= '0' ) || value == '-' )
-                           return std::move( parse_number( str, offset ) );
+                           return parse_number( str, offset );
         }
         std::cerr << "ERROR: Parse: Unknown starting character '" << value << "'\n";
         return JSON();
@@ -640,7 +640,7 @@ namespace {
 
 inline JSON JSON::Load( const string &str ) {
     size_t offset = 0;
-    return std::move( parse_next( str, offset ) );
+    return parse_next( str, offset );
 }
 
 } // End Namespace json
