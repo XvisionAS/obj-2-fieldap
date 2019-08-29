@@ -23,7 +23,7 @@ void process_output_socket(process_t& process)
 {
 	json::JSON json;
 
-	for (uint i = 0; i < process.scene->mNumMeshes; i++)
+	for (uint32 i = 0; i < process.scene->mNumMeshes; i++)
 	{
 		auto mesh = process.scene->mMeshes[i];
 
@@ -50,7 +50,7 @@ void process_output_socket(process_t& process)
 
 		//Finding center
 		v3 center = v3(0.0f);
-		for (uint m = 0; m < mesh->mNumVertices; m++)
+		for (uint32 m = 0; m < mesh->mNumVertices; m++)
 		{
 			auto &v = mesh->mVertices[m];
 			center.add(v3(v.x, v.y, v.z));

@@ -4,7 +4,7 @@
 void process_generate_triangle_list(process_t& process) 
 {
 	size_t face_count = 0;
-	for (uint i = 0; i < process.scene->mNumMeshes; i++)
+	for (uint32 i = 0; i < process.scene->mNumMeshes; i++)
 	{
 		auto mesh = process.scene->mMeshes[i];
 		if (mesh->mPrimitiveTypes & (aiPrimitiveType_LINE | aiPrimitiveType_POINT)) continue;
@@ -19,7 +19,7 @@ void process_generate_triangle_list(process_t& process)
 
 	size_t triangle_index = 0;
 	size_t total_vertex_count = 0;
-	for (uint mesh_it = 0; mesh_it < process.scene->mNumMeshes; mesh_it++)
+	for (uint32 mesh_it = 0; mesh_it < process.scene->mNumMeshes; mesh_it++)
 	{
 		auto mesh = process.scene->mMeshes[mesh_it];
 		if (mesh->mPrimitiveTypes & (aiPrimitiveType_LINE | aiPrimitiveType_POINT)) continue;

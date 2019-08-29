@@ -23,6 +23,7 @@
 
 
 
+typedef unsigned int uint32;
 
 struct triangle_t {
 	int			a, b, c;

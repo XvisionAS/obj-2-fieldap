@@ -9,12 +9,12 @@ void process_swap_yz(process_t& process) {
 		std::swap(vertex[1], vertex[2]);
 	}
 
-	for (uint i = 0; i < process.scene->mNumMeshes; i++)
+	for (uint32 i = 0; i < process.scene->mNumMeshes; i++)
 	{
 		auto mesh = process.scene->mMeshes[i];
 		if (mesh->mPrimitiveTypes & (aiPrimitiveType_LINE | aiPrimitiveType_POINT)) continue;
 
-		for (uint i = 0; i < mesh->mNumVertices; i++)
+		for (uint32 i = 0; i < mesh->mNumVertices; i++)
 		{
 			auto &v = mesh->mVertices[i];
 			std::swap(v.y, v.z);
