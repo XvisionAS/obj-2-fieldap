@@ -14,12 +14,13 @@ addons:
     packages:
       - gcc-5
       - g++-5
+      - libassimp-dev
     sources:
       - ubuntu-toolchain-r-test
 
 script:
   - if [ $TRAVIS_OS_NAME == linux ]; then g++-5 -std=c++14 process/*.cpp externals/*.cc main.cpp -lstdc++ -o build/obj-2-fieldap.$TRAVIS_OS_NAME; fi
   - if [ $TRAVIS_OS_NAME == osx ];   then clang++ -std=c++14 process/*.cpp externals/*.cc main.cpp -lstdc++ -o build/obj-2-fieldap.$TRAVIS_OS_NAME; fi
-    
+
 notifications:
   email: false
