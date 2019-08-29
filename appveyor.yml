@@ -8,7 +8,7 @@ environment:
 configuration: Release
 
 before_build:
-  - nuget restore
+  - nuget restore -SolutionDirectory
 
 build:
   project: build/obj-2-fieldap.sln
