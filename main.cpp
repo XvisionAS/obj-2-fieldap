@@ -7,6 +7,21 @@
 #include "process/process.h"
 #include "externals/cmdline.h"
 
+#include <assimp/version.h>
+
+void print_assimp_version() {
+	const unsigned int flags = aiGetCompileFlags();
+	std::cout << "ASSIMP Version : "
+		<< aiGetVersionMajor() << "."
+		<< aiGetVersionMinor()
+		<< (flags & ASSIMP_CFLAGS_DEBUG ? "-debug " : "")
+		<< (flags & ASSIMP_CFLAGS_NOBOOST ? "-noboost " : "")
+		<< (flags & ASSIMP_CFLAGS_SHARED ? "-shared " : "")
+		<< (flags & ASSIMP_CFLAGS_SINGLETHREADED ? "-st " : "")
+		<< (flags & ASSIMP_CFLAGS_STLPORT ? "-stlport " : "") << std::endl;
+}
+
+
 void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 	cmdparser.add<int>("render-texture-size",
 		'a',
@@ -81,6 +96,7 @@ void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 int main(int ac, char** av) {
 	cmdline::parser cmdparser;
 
+	print_assimp_version();
 	parse_command_line(ac, av, cmdparser);
 	for (auto& input : cmdparser.rest()) {
 		process_t process;
@@ -107,7 +123,7 @@ int main(int ac, char** av) {
 			
 			-Simen 23/1/2018
 		*/
-
+		
 		process_file_path_and_name(process);
 
 		if (!process_load_obj(process)) 
