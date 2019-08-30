@@ -36,36 +36,37 @@ struct triangle_t {
 typedef std::vector<triangle_t>	triangles_t;
 
 struct process_t {
-	Assimp::Importer                  importer;
-	const aiScene                     *scene;
+	Assimp::Importer				importer;
+	const aiScene					*scene;
 
-	int									render_tex_size;
-	bool														debug_render_to_tga;
-	triangles_t											triangles;
-	std::vector<point_t>						points;
-	std::vector<v3>									vertices;
+	int								render_tex_size;
+	bool							debug_render_to_tga;
+	triangles_t						triangles;
+	std::vector<point_t>			points;
+	std::vector<v3>					vertices;
+	std::vector<aiMatrix4x4>		matrices;
 
-	std::string											file_name;
-	std::string											file_name_without_ext;
-	std::string											file_path;
-	bool														swap_yz;
-	bool														center_xy;
-	bool														sort_using_zmax;
+	std::string						file_name;
+	std::string						file_name_without_ext;
+	std::string						file_path;
+	bool							swap_yz;
+	bool							center_xy;
+	bool							sort_using_zmax;
 
-	v3															min;
-	v3															max;
+	v3								min;
+	v3								max;
 
-	float														gamma;
-	bool														use_gamma_correction;
+	float							gamma;
+	bool							use_gamma_correction;
 
-	bool														glue;
+	bool							glue;
 
-	float														outline_thickness;
-	std::string											outline_color;
+	float							outline_thickness;
+	std::string						outline_color;
 
-	std::map<int, triangles_t>			triangles_per_materials;
+	std::map<int, triangles_t>		triangles_per_materials;
 
-	float														svg_scale;
+	float							svg_scale;
 };
 
 void process_from_assimp_to_v3(process_t& process);

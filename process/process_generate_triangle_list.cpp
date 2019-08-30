@@ -30,7 +30,8 @@ void process_generate_triangle_list(process_t& process)
 		}
 
 		size_t faces_count = mesh->mNumFaces;
-
+		
+		const auto& matrix = process.matrices[mesh_it];
 		for (size_t face_it = 0; face_it < faces_count; ++face_it)
 		{
 			auto   face              = mesh->mFaces[face_it];
@@ -50,7 +51,7 @@ void process_generate_triangle_list(process_t& process)
 				triangle.an = face.mIndices[0]; //Normal are for assimp mesh->mNormals
 				triangle.bn = face.mIndices[1];
 				triangle.cn = face.mIndices[2];
-
+				
 				triangle.max_z = std::max(mesh->mVertices[face.mIndices[0]].z, std::max(mesh->mVertices[face.mIndices[1]].z, mesh->mVertices[face.mIndices[2]].z));
 		
 				triangle.material = material;
