@@ -1,6 +1,6 @@
 #include "process.h"
 
-void process_from_tinyobj_to_v3(process_t& process) {
+void process_from_assimp_to_v3(process_t& process) {
 	
 	int total_verts = 0;
 	for (uint32 i = 0; i < process.scene->mNumMeshes; i++)

@@ -9,7 +9,6 @@ void process_debug_render_mesh_to_tga(process_t& process)
 
 	for (const auto &triangle : process.triangles) 
 	{
-		//float		*color = process.tinyobj_materials[triangle.material].diffuse;
 		aiColor3D aiDiffuse(0.f,0.f,0.f);
 		process.scene->mMaterials[triangle.material]->Get(AI_MATKEY_COLOR_DIFFUSE, aiDiffuse);
 		int	diffuse = (int)(aiDiffuse.r * 255) | (int)(aiDiffuse.g * 255) << 8 | (int)(aiDiffuse.b * 255) << 16 | 0xff000000;

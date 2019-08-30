@@ -139,7 +139,7 @@ int main(int ac, char** av) {
 			process_center_xy(process);
 		}
 
-		process_from_tinyobj_to_v3(process);
+		process_from_assimp_to_v3(process);
 
 		process_compute_min_max(process);
 		

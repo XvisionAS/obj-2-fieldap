@@ -42,9 +42,6 @@
     <ClCompile Include="process\process_triangle_occlusion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="externals\tiny_obj_loader.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="process\process_generate_triangle_list.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -52,9 +49,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="process\process_backface_culling.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="process\process_output_threejs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="process\process_file_path_and_name.cpp">
@@ -72,9 +66,6 @@
     <ClCompile Include="process\process_output_svg2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="process\process_from_tinyobj_to_v3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="process\process_glue_to_ground.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -87,15 +78,15 @@
     <ClCompile Include="is_tag.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="process\process_from_assimp_to_v3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="externals\stb_image_write.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\tiny_obj_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="libs\rasterizer.h">

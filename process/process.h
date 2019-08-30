@@ -17,7 +17,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
-#include "../externals/tiny_obj_loader.h"
 #include "../libs/v3.h"
 #include "../libs/rasterizer.h"
 
@@ -37,15 +36,10 @@ struct triangle_t {
 typedef std::vector<triangle_t>	triangles_t;
 
 struct process_t {
-	std::vector<tinyobj::material_t>	tinyobj_materials;
-	std::vector<tinyobj::shape_t>			tinyobj_shapes;
-	tinyobj::attrib_t									tinyobj_attrib;
-	std::string												tinyobj_err;
-
 	Assimp::Importer                  importer;
-  const aiScene                     *scene;
+	const aiScene                     *scene;
 
-	int															render_tex_size;
+	int									render_tex_size;
 	bool														debug_render_to_tga;
 	triangles_t											triangles;
 	std::vector<point_t>						points;
@@ -74,7 +68,7 @@ struct process_t {
 	float														svg_scale;
 };
 
-void process_from_tinyobj_to_v3(process_t& process);
+void process_from_assimp_to_v3(process_t& process);
 void process_optimize_mesh(process_t& process);
 void process_triangle_occlusion(process_t& process);
 void process_remove_degenerate_triangle(process_t& process);
@@ -86,14 +80,14 @@ void process_generate_triangle_list(process_t& process);
 bool process_load_obj(process_t& process);
 void process_file_path_and_name(process_t& process);
 void process_output_svg(process_t& process);
-void process_output_svg2(process_t& process);
+//void process_output_svg2(process_t& process);
 void process_center_xy(process_t& process);
 void process_output_threejs(process_t& process);
 void process_output_socket(process_t& process);
 void process_swap_yz(process_t& process);
 void process_glue_to_ground(process_t& process);
 void process_fix_winding(process_t &process);
-void process_output_svg_triangles(process_t &process);
+//void process_output_svg_triangles(process_t &process);
 void process_backface_culling(process_t& process);
 
 bool is_tag(const std::string& string);

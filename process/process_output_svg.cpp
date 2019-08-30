@@ -110,7 +110,7 @@ static void build_element_list(process_t& process, edge_infos_t& edges, elements
 	}
 }
 
-static void get_diffuse_from_tinyobj_material(process_t& process, int material, char* buffer) {
+static void get_diffuse_from_assimp_material(process_t& process, int material, char* buffer) {
 	aiColor3D diffuse(0.f,0.f,0.f);
 	process.scene->mMaterials[material]->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
 	float actual_diffuse[] = {
@@ -163,7 +163,7 @@ void process_output_svg(process_t& process) {
 			previous_material = element.material;
 			char color[16];
 			if (element.material != -1) {
-				get_diffuse_from_tinyobj_material(process, element.material, color);
+				get_diffuse_from_assimp_material(process, element.material, color);
 			}
 			else {
 				strcpy(color, "#aaa");

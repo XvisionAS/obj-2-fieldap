@@ -129,7 +129,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="externals\tiny_obj_loader.cc" />
     <ClCompile Include="is_tag.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="process\process_backface_culling.cpp" />
@@ -137,7 +136,7 @@
     <ClCompile Include="process\process_compute_min_max.cpp" />
     <ClCompile Include="process\process_debug_render_mesh_to_tga.cpp" />
     <ClCompile Include="process\process_file_path_and_name.cpp" />
-    <ClCompile Include="process\process_from_tinyobj_to_v3.cpp" />
+    <ClCompile Include="process\process_from_assimp_to_v3.cpp" />
     <ClCompile Include="process\process_generate_triangle_list.cpp" />
     <ClCompile Include="process\process_glue_to_ground.cpp" />
     <ClCompile Include="process\process_load_obj.cpp" />
@@ -146,7 +145,6 @@
     <ClCompile Include="process\process_output_svg.cpp" />
     <ClCompile Include="process\process_output_svg2.cpp" />
     <ClCompile Include="process\process_output_svg_triangles.cpp" />
-    <ClCompile Include="process\process_output_threejs.cpp" />
     <ClCompile Include="process\process_remove_degenerate_triangle.cpp" />
     <ClCompile Include="process\process_fix_winding.cpp" />
     <ClCompile Include="process\process_split_triangle_by_material.cpp" />
@@ -158,7 +156,6 @@
     <ClInclude Include="externals\cmdline.h" />
     <ClInclude Include="externals\json.hpp" />
     <ClInclude Include="externals\stb_image_write.h" />
-    <ClInclude Include="externals\tiny_obj_loader.h" />
     <ClInclude Include="libs\aabb.h" />
     <ClInclude Include="process\process.h" />
     <ClInclude Include="libs\rasterizer.h" />

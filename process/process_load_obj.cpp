@@ -1,6 +1,7 @@
 #include "process.h"
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assimp/Exporter.hpp>
 
 bool process_load_obj(process_t& process) 
 {
@@ -12,6 +13,9 @@ bool process_load_obj(process_t& process)
 	| aiProcess_FindDegenerates
 	| aiProcess_FindInvalidData
 	| aiProcess_SortByPType);
+
+	Assimp::Exporter exporter;
+	auto value = exporter.Export(process.scene, "collada", process.file_path + "\\out.dae");
 
 	if (!process.scene)
 	{
