@@ -43,8 +43,7 @@ struct process_t {
 	bool							debug_render_to_tga;
 	triangles_t						triangles;
 	std::vector<point_t>			points;
-	std::vector<v3>					vertices;
-	std::vector<aiMatrix4x4>		matrices;
+	std::vector<v3>					vertices;	
 
 	std::string						file_name;
 	std::string						file_name_without_ext;
@@ -90,5 +89,6 @@ void process_glue_to_ground(process_t& process);
 void process_fix_winding(process_t &process);
 //void process_output_svg_triangles(process_t &process);
 void process_backface_culling(process_t& process);
+void process_output_obj(process_t& process);
 
 bool is_tag(const std::string& string);

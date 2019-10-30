@@ -3,6 +3,7 @@
 #include <assimp/postprocess.h>
 #include <assimp/Exporter.hpp>
 #include <assimp/cimport.h>
+#include <sstream>
 
 static aiNode* assimp_find_node(aiNode* node, size_t meshIndex)
 {
@@ -44,7 +45,7 @@ bool process_load_obj(process_t& process)
 	| aiProcess_FindInvalidData
 	| aiProcess_SortByPType);
 
-	process.matrices.reserve(process.scene->mNumMeshes);
+	
 
 	for (size_t i = 0; i < process.scene->mNumMeshes; i++)
 	{
@@ -92,6 +93,24 @@ bool process_load_obj(process_t& process)
 	else
 	{
 		return true;
+	}
+
+}
+
+
+void process_output_obj(process_t& process) 
+{
+	std::ofstream obj;
+	obj.open(process.file_name_without_ext + ".obj");
+	for (auto v : process.vertices)
+	{
+		obj.precision(4);
+		obj << std::fixed;
+		obj << "v " << v.x << " " << v.y << " " << v.z << std::endl;		
+	}
+
+	for (auto t : process.triangles) {
+		obj << "f " << t.a << " " << t.b << " " << t.c << std::endl;
 	}
 
 }

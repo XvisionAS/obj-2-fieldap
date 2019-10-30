@@ -152,6 +152,8 @@ int main(int ac, char** av) {
 
 		process_optimize_mesh(process);
 
+		process_output_obj(process);
+
 		process_backface_culling(process);
 		process_triangle_occlusion(process);
 

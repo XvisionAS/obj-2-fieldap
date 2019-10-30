@@ -8,8 +8,7 @@ void process_glue_to_ground(process_t& process)
 		if (mesh->mPrimitiveTypes & (aiPrimitiveType_LINE | aiPrimitiveType_POINT))
 		{
 			continue;
-		}
-		const auto& matrix = process.matrices[i];
+		}		
 		for (size_t m = 0; m < mesh->mNumVertices; m++)
 		{
 			auto &v = mesh->mVertices[m];

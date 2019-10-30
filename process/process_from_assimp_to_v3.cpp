@@ -26,6 +26,10 @@ void process_from_assimp_to_v3(process_t& process) {
 			continue;
 		}
 		
+		if (is_tag(mesh->mName.C_Str()))
+		{
+			continue;
+		}
 
 		/*auto node = assimp_find_node(process.scene, )*/
 

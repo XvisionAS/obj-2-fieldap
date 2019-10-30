@@ -22,7 +22,10 @@ void process_generate_triangle_list(process_t& process)
 	for (uint32 mesh_it = 0; mesh_it < process.scene->mNumMeshes; mesh_it++)
 	{
 		auto mesh = process.scene->mMeshes[mesh_it];
-		if (mesh->mPrimitiveTypes & (aiPrimitiveType_LINE | aiPrimitiveType_POINT)) continue;
+		if (mesh->mPrimitiveTypes & (aiPrimitiveType_LINE | aiPrimitiveType_POINT))
+		{
+			continue;
+		}
 
 		if (is_tag(mesh->mName.C_Str()))
 		{
@@ -30,8 +33,7 @@ void process_generate_triangle_list(process_t& process)
 		}
 
 		size_t faces_count = mesh->mNumFaces;
-		
-		const auto& matrix = process.matrices[mesh_it];
+				
 		for (size_t face_it = 0; face_it < faces_count; ++face_it)
 		{
 			auto   face              = mesh->mFaces[face_it];
@@ -44,9 +46,9 @@ void process_generate_triangle_list(process_t& process)
 			{
 				auto& triangle = process.triangles[triangle_index++];
 
-				triangle.a = total_vertex_count + face.mIndices[0]; //Vertex indexes are for process.vertices
-				triangle.b = total_vertex_count + face.mIndices[1];
-				triangle.c = total_vertex_count + face.mIndices[2];
+				triangle.a = (int) total_vertex_count + face.mIndices[0]; //Vertex indexes are for process.vertices
+				triangle.b = (int) total_vertex_count + face.mIndices[1];
+				triangle.c = (int) total_vertex_count + face.mIndices[2];
 
 				triangle.an = face.mIndices[0]; //Normal are for assimp mesh->mNormals
 				triangle.bn = face.mIndices[1];
