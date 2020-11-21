@@ -22,54 +22,86 @@ std::vector<std::string> split_string(const std::string& str, const std::string&
 void process_output_socket(process_t& process)
 {
 	json::JSON json;
+	json["fileType"] = "futureon-model-infos";
+	json["fileVersion"] = "1.0.0";
 
-	for (uint32 i = 0; i < process.scene->mNumMeshes; i++)
-	{
-		auto mesh = process.scene->mMeshes[i];
+	auto rootNode = process.scene->mRootNode;
 
-		if (!is_tag(mesh->mName.C_Str()))
-		{
+	for (uint32 i = 0; i < rootNode->mNumChildren; i++) {
+		auto node = rootNode->mChildren[i];
+		if (node->mNumMeshes != 1) {
 			continue;
 		}
 
-		auto split = split_string(mesh->mName.C_Str(), "_");
+		auto meshIndex = node->mMeshes[0];
+		auto mesh      = process.scene->mMeshes[meshIndex];
+
+		std::string meshName(mesh->mName.C_Str());
+		if (!(meshName.find("tag_") == 0 || meshName.find("docking_") == 0)) {
+			continue;
+		}
+
+		auto split = split_string(meshName, "_");
 
 		if (split.empty()) {
 			continue;
 		}
 
-		std::string name = split[1];
-		json::JSON	tag;
+		if (split[0] == "tag") {
+			std::string name = split[1];
+			json::JSON	tag;
 
-		tag["name"] = name;
-		if (split.size() > 2) {
-			tag["types"] = json::Array(
-				std::atoi(split[2].c_str())
-			);
-		}
+			tag["name"] = name;
+			if (split.size() > 2) {
+				tag["types"] = json::Array(
+					std::atoi(split[2].c_str())
+				);
+			}
+			aiQuaternion quaternion;
+			aiVector3D   position;
+			
+			node->mTransformation.DecomposeNoScaling(quaternion, position);
 
-		//Finding center
-		v3 center = v3(0.0f);
-		for (uint32 m = 0; m < mesh->mNumVertices; m++)
-		{
-			auto &v = mesh->mVertices[m];
-			center.add(v3(v.x, v.y, v.z));
+			tag["x"] = position.x;
+			if (process.swap_yz)
+			{
+				tag["y"] = position.y;
+				tag["z"] = position.z;
+			}
+			else
+			{
+				tag["y"] = position.z;
+				tag["z"] = position.y;
+			}
+			json["tags"].append(tag);
 		}
-		center.mul(1.0f / (float)(mesh->mNumVertices));
+		else if (split[0] == "docking") {
+			json::JSON	docking;
+			auto type = split[1];
+			docking["name"] = split[2];
+			
+			aiQuaternion quaternion;
+			aiVector3D   position;
 
+			node->mTransformation.DecomposeNoScaling(quaternion, position);
 
-		tag["x"] = center.x;
-		if (process.swap_yz)
-		{
-			tag["y"] = center.y;
-			tag["z"] = center.z;
+			docking["translation"]["x"] = position.x;
+			docking["translation"]["y"] = position.y;
+			docking["translation"]["z"] = position.z;
+
+			docking["rotation"]["x"] = quaternion.x;
+			docking["rotation"]["y"] = quaternion.y;
+			docking["rotation"]["z"] = quaternion.z;
+			docking["rotation"]["w"] = quaternion.w;
+
+			if (type == "male") {
+				json["males"].append(docking);
+			}
+			else {
+				json["female"] = docking;
+			}
+
 		}
-		else 
-		{
-			tag["y"] = center.z;
-			tag["z"] = center.y;
-		}
-		json.append(tag);
 	}
 
 	std::ofstream socket;
