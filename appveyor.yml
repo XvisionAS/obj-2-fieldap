@@ -3,7 +3,6 @@ os:
   - Visual Studio 2019
 
 environment:
-  ASSIMP_BUILD_SHARED_LIBS: OFF
   matrix:
     - TOOLSET: vs2019
 
@@ -11,8 +10,8 @@ environment:
 configuration: Release
 
 before_build:
-  - vcpkg install assimp:x86-windows
-  - vcpkg install assimp:x64-windows
+  - vcpkg install assimp:x86-windows-static
+  - vcpkg install assimp:x64-windows-static
   - ps: (Get-Content version.h).replace('[BUILD_VERSION]', '{version}') | Set-Content version.h
 
 
