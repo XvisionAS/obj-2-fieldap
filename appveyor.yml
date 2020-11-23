@@ -15,7 +15,8 @@ before_build:
   - vcpkg install assimp:x64-windows
   - ps: (Get-Content version.h).replace('[BUILD_VERSION]', '{version}') | Set-Content version.h
 
-cache: 
+
+cache:
   - c:\tools\vcpkg\installed\
 
 build:
