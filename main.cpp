@@ -8,10 +8,12 @@
 #include "externals/cmdline.h"
 
 #include <assimp/version.h>
+#include "version.h"
 
-void print_assimp_version() {
+void print_version() {
+	std::cout << "obj-2-fieldap v" << VERSION << std::endl;	
 	const unsigned int flags = aiGetCompileFlags();
-	std::cout << "ASSIMP Version : "
+	std::cout << "* using ASSIMP Version : "
 		<< aiGetVersionMajor() << "."
 		<< aiGetVersionMinor()
 		<< (flags & ASSIMP_CFLAGS_DEBUG ? "-debug " : "")
@@ -20,6 +22,7 @@ void print_assimp_version() {
 		<< (flags & ASSIMP_CFLAGS_SINGLETHREADED ? "-st " : "")
 		<< (flags & ASSIMP_CFLAGS_STLPORT ? "-stlport " : "") << std::endl;
 }
+
 
 
 void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
@@ -96,7 +99,7 @@ void parse_command_line(int ac, char** av, cmdline::parser& cmdparser) {
 int main(int ac, char** av) {
 	cmdline::parser cmdparser;
 
-	print_assimp_version();
+	print_version();
 	parse_command_line(ac, av, cmdparser);
 	for (auto& input : cmdparser.rest()) {
 		process_t process;
