@@ -6,12 +6,14 @@ environment:
   matrix:
     - TOOLSET: vs2019
 
+platform:
+  - x64
 
-configuration: Release
+configuration:
+  - Release
 
-before_build:
-  - vcpkg install assimp:x86-windows-static
-  - vcpkg install assimp:x64-windows-static
+before_build:  
+  - vcpkg install assimp:x64-windows
   - ps: (Get-Content version.h).replace('[BUILD_VERSION]', '{version}') | Set-Content version.h
 
 
@@ -22,7 +24,7 @@ build:
   project: build/obj-2-fieldap.sln
 
 after_build:
-  - cd build && del /F /Q obj-2-fieldap.zip && 7z a obj-2-fieldap.zip *.exe *.pdb
+  - cd build && del /F /Q obj-2-fieldap.zip && 7z a obj-2-fieldap.zip *.exe *.pdb *.dll
 
 artifacts:
   - path: build/obj-2-fieldap.zip
