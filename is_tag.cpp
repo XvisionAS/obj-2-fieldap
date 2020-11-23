@@ -5,11 +5,16 @@
 #include <algorithm>
 
 const static std::string tag("tag_");
+const static std::string docking("docking_");
+
+bool find(const std::string& in, const std::string& what) {
+	return std::search(
+		in.begin(), in.end(),
+		what.begin(), what.end(),
+		[](char ch1, char ch2) { return std::toupper(ch1) == std::toupper(ch2); }
+	) != in.end();
+}
 
 bool is_tag(const std::string& string) {
-	return std::search(
-		string.begin(), string.end(),
-		tag.begin(), tag.end(),
-		[](char ch1, char ch2) { return std::toupper(ch1) == std::toupper(ch2); }
-	) != string.end();
+	return find(string, tag) || find(string, docking);
 }
