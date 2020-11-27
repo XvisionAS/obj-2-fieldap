@@ -14,7 +14,7 @@ configuration:
 
 before_build:  
   - vcpkg install assimp:x64-windows
-  - ps: (Get-Content version.h).replace('[BUILD_VERSION]', '{version}') | Set-Content version.h
+  - ps: (Get-Content version.h).replace('[BUILD_VERSION]',  $env:APPVEYOR_BUILD_VERSION) | Set-Content version.h
 
 
 cache:

@@ -65,13 +65,13 @@ void process_output_socket(process_t& process)
 			tag["x"] = position.x;
 			if (process.swap_yz)
 			{
-				tag["y"] = position.y;
-				tag["z"] = position.z;
+				tag["y"] = position.z;
+				tag["z"] = position.y;
 			}
 			else
 			{
-				tag["y"] = position.z;
-				tag["z"] = position.y;
+				tag["y"] = position.y;
+				tag["z"] = position.z;
 			}
 			json["tags"].append(tag);
 		}

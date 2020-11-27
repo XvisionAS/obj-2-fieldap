@@ -1,2 +1,2 @@
 
-#define VERSION "[BUILD_VERSION]"
+#define VERSION ""
