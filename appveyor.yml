@@ -21,7 +21,7 @@ cache:
   - c:\tools\vcpkg\installed\
 
 build:
-  project: build/obj-2-fieldap.sln
+  project: obj-2-fieldap.sln
 
 after_build:
   - cd build && del /F /Q obj-2-fieldap.zip && 7z a obj-2-fieldap.zip *.exe
