@@ -1,4 +1,10 @@
 #include "process.h"
+
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <assimp/Exporter.hpp>
+#include <assimp/cimport.h>
+
 #include "../externals/json.hpp"
 
 
@@ -19,22 +25,28 @@ std::vector<std::string> split_string(const std::string& str, const std::string&
 	return split;
 }
 
-void process_output_socket(process_t& process)
+static void assimp_get_transformation(aiNode* node, aiMatrix4x4* matrix)
 {
-	json::JSON json;
-	json["fileType"] = "futureon-model-infos";
-	json["fileVersion"] = "1.0.0";
+	if (node->mParent)
+	{
+		assimp_get_transformation(node->mParent, matrix);
+	}
+	aiMultiplyMatrix4(matrix, &node->mTransformation);
+}
 
-	auto rootNode = process.scene->mRootNode;
 
-	for (uint32 i = 0; i < rootNode->mNumChildren; i++) {
-		auto node = rootNode->mChildren[i];
+void process_node(process_t& process, json::JSON& json, aiNode* parentNode) {
+	for (uint32 i = 0; i < parentNode->mNumChildren; i++) {
+		auto node = parentNode->mChildren[i];
+
+		process_node(process, json, node);
+
 		if (node->mNumMeshes != 1) {
 			continue;
 		}
 
 		auto meshIndex = node->mMeshes[0];
-		auto mesh      = process.scene->mMeshes[meshIndex];
+		auto mesh = process.scene->mMeshes[meshIndex];
 
 		std::string meshName(mesh->mName.C_Str());
 		if (!(meshName.find("tag_") == 0 || meshName.find("docking_") == 0)) {
@@ -57,10 +69,16 @@ void process_output_socket(process_t& process)
 					std::atoi(split[2].c_str())
 				);
 			}
+
+			aiMatrix4x4 matrix;
+			aiIdentityMatrix4(&matrix);
+			
+			assimp_get_transformation(node, &matrix);
+			
 			aiQuaternion quaternion;
 			aiVector3D   position;
-			
-			node->mTransformation.DecomposeNoScaling(quaternion, position);
+
+			matrix.DecomposeNoScaling(quaternion, position);
 
 			tag["x"] = position.x;
 			if (process.swap_yz)
@@ -79,11 +97,16 @@ void process_output_socket(process_t& process)
 			json::JSON	docking;
 			auto type = split[1];
 			docking["name"] = split[2];
-			
+
+			aiMatrix4x4 matrix;
+			aiIdentityMatrix4(&matrix);
+
+			assimp_get_transformation(node, &matrix);
+
 			aiQuaternion quaternion;
 			aiVector3D   position;
 
-			node->mTransformation.DecomposeNoScaling(quaternion, position);
+			matrix.DecomposeNoScaling(quaternion, position);
 
 			docking["translation"]["x"] = position.x;
 			docking["translation"]["y"] = position.y;
@@ -103,6 +126,17 @@ void process_output_socket(process_t& process)
 
 		}
 	}
+}
+
+void process_output_socket(process_t& process)
+{
+	json::JSON json;
+	json["fileType"] = "futureon-model-infos";
+	json["fileVersion"] = "1.0.0";
+
+	auto rootNode = process.scene->mRootNode;
+	
+	process_node(process, json, rootNode);
 
 	std::ofstream socket;
 	socket.open(process.file_name_without_ext + ".sockets");
